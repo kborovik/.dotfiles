@@ -1,0 +1,137 @@
+{
+  "diff_view_style": "unified",
+  "title_bar": {
+    "show_branch_icon": false,
+  },
+  "debugger": {
+    "button": false,
+  },
+  "collaboration_panel": {
+    "dock": "bottom",
+  },
+  "git_panel": {
+    "dock": "right",
+  },
+  "outline_panel": {
+    "dock": "right",
+  },
+  "project_panel": {
+    "dock": "right",
+  },
+  "helix_mode": false,
+  "relative_line_numbers": "disabled",
+  "vim_mode": true,
+  "ssh_connections": [
+    {
+      "host": "mailpilot-prd1.lab5.ca",
+      "args": [],
+      "projects": [
+        {
+          "paths": ["/home/ubuntu/lab5-missions"],
+        },
+      ],
+    },
+  ],
+  "agent": {
+    "dock": "bottom",
+    "single_file_review": true,
+    "use_modifier_to_send": true,
+    "play_sound_when_agent_done": "always",
+    "inline_assistant_model": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-6-latest",
+    },
+    "default_profile": "minimal",
+    "default_width": 500,
+    "default_height": 400,
+    "default_model": {
+      "effort": "medium",
+      "enable_thinking": false,
+      "provider": "zed.dev",
+      "model": "claude-sonnet-4-6",
+    },
+  },
+  "edit_predictions": {
+    "mode": "subtle",
+  },
+  "agent_buffer_font_size": 19.0,
+  "agent_ui_font_size": 19.0,
+  "buffer_font_size": 19.0,
+  "buffer_font_family": "IBM Plex Mono",
+  "ui_font_size": 19.0,
+  "ui_font_family": "IBM Plex Mono",
+  "icon_theme": {
+    "mode": "system",
+    "light": "Catppuccin Macchiato",
+    "dark": "Catppuccin Macchiato",
+  },
+  "theme": {
+    "mode": "dark",
+    "light": "Catppuccin Macchiato - No Italics",
+    "dark": "Catppuccin Macchiato - No Italics",
+  },
+  "cursor_blink": false,
+  "drop_target_size": 1.0,
+  "show_whitespaces": "boundary",
+  "scroll_beyond_last_line": "off",
+  "use_smartcase_search": true,
+  "tab_size": 2,
+  "prettier": {
+    "singleQuote": true,
+  },
+  "max_tabs": 8,
+  "tabs": {
+    "git_status": true,
+    "file_icons": true,
+  },
+  "git": {
+    "inline_blame": {
+      "enabled": false,
+    },
+  },
+  "terminal": {
+    "shell": {
+      "program": "/opt/homebrew/bin/fish",
+    },
+  },
+  "languages": {
+    "Python": {
+      "code_actions_on_format": {
+        "source.organizeImports.ruff": true,
+      },
+      "format_on_save": "on",
+    },
+    "Markdown": {
+      "format_on_save": "on",
+    },
+    "Fish": {
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "/opt/homebrew/bin/fish",
+          "arguments": ["-c", "fish_indent", "{buffer_path}"],
+        },
+      },
+    },
+  },
+  "file_types": {
+    "Ansible": [
+      "**.ansible.yml",
+      "**.ansible.yaml",
+      "**/defaults/*.yml",
+      "**/defaults/*.yaml",
+      "**/meta/*.yml",
+      "**/meta/*.yaml",
+      "**/tasks/*.yml",
+      "**/tasks/*.yaml",
+      "**/handlers/*.yml",
+      "**/handlers/*.yaml",
+      "**/group_vars/*.yml",
+      "**/group_vars/*.yaml",
+      "**/playbooks/*.yaml",
+      "**/playbooks/*.yml",
+      "**playbook*.yaml",
+      "**playbook*.yml",
+    ],
+  },
+}

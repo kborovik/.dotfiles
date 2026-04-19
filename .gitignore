@@ -1,0 +1,6 @@
+fish/fish_variables
+ssh/config
+.DS_Store
+*.swp
+*.swo
+*~

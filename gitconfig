@@ -1,0 +1,73 @@
+[user]
+	name = Konstantin Borovik
+	email = github@lab5.ca
+	signingKey = E4AFCA7FBB19FC029D519A524AEBB5178D5E96C1
+
+[commit]
+	gpgSign = true
+
+[pager]
+	diff = riff
+	show = riff
+	log = riff
+
+[interactive]
+	diffFilter = riff --color=on
+
+[diff]
+	tool = vimdiff
+	algorithm = histogram
+
+[difftool]
+	prompt = false
+
+[merge]
+	tool = vimdiff
+
+[submodule]
+	recurse = true
+
+[rerere]
+	enabled = true
+	autoUpdate = true
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[advice]
+	addIgnoredFile = false
+
+[fetch]
+	all = true
+	prune = true
+	pruneTags = true
+	force = true
+
+[pull]
+	rebase = true
+
+[rebase]
+	autoSquash = true
+
+[branch]
+	sort = -committerdate
+
+[tag]
+	sort = version:refname
+
+[credential]
+	helper = store --file ~/.git-credentials
+
+[credential "https://github.com"]
+	helper =
+	helper = !gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !gh auth git-credential
+
+[init]
+	defaultBranch = main

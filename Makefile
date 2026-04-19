@@ -61,6 +61,7 @@ riff_bin := /opt/homebrew/bin/riff
 vim_bin := /opt/homebrew/bin/vim
 gitui_bin := /opt/homebrew/bin/gitui
 glow_bin := /opt/homebrew/bin/glow
+tree_bin := /opt/homebrew/bin/tree
 
 $(coreutils_bin):
 	$(call header,coreutils - Install)
@@ -114,7 +115,11 @@ $(glow_bin):
 	$(call header,glow - Install)
 	brew install glow
 
-tools: $(coreutils_bin) $(sed_bin) $(gmake_bin) $(jq_bin) $(pass_bin) $(gh_bin)
+$(tree_bin):
+	$(call header,tree - Install)
+	brew install tree
+
+tools: $(coreutils_bin) $(sed_bin) $(gmake_bin) $(jq_bin) $(pass_bin) $(gh_bin) $(tree_bin)
 
 base: tools $(fish_bin) $(gpg_bin) $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin) $(glow_bin) ## Install base tools and configs
 	$(call header,Base - Configure)

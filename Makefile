@@ -2,7 +2,7 @@
 .EXPORT_ALL_VARIABLES:
 .PHONY: default help init base tools zed claude pgsql ssh
 .PHONY: fish gpg git vim gitui bat glamour
-.PHONY: git-credentials-load git-credentials-save commit prompt
+.PHONY: git-credentials-load git-credentials-save commit prompt ssh-save
 
 MAKEFLAGS += --no-builtin-rules --no-builtin-variables
 
@@ -82,7 +82,7 @@ $(gpg_bin):
 	$(call header,gnupg - Install)
 	brew install gnupg
 
-$(pass_bin): $(gpg_bin)
+$(pass_bin): | $(gpg_bin)
 	$(call header,pass - Install)
 	brew install pass
 
@@ -118,9 +118,9 @@ tools: $(coreutils_bin) $(sed_bin) $(gmake_bin) $(jq_bin) $(pass_bin) $(gh_bin)
 
 base: tools $(fish_bin) $(gpg_bin) $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin) $(glow_bin) ## Install base tools and configs
 	$(call header,Base - Configure)
-	/bin/ln -fs $(CURDIR)/fish $(HOME)/.config/fish
+	rm -f $(HOME)/.config/fish && /bin/ln -fs $(CURDIR)/fish $(HOME)/.config/fish
 	/bin/ln -fs $(CURDIR)/gitconfig $(HOME)/.gitconfig
-	/bin/ln -fs $(CURDIR)/vim $(HOME)/.vim
+	rm -f $(HOME)/.vim && /bin/ln -fs $(CURDIR)/vim $(HOME)/.vim
 	/bin/ln -fs $(CURDIR)/vim/vimrc $(HOME)/.vimrc
 	mkdir -p $(HOME)/.config/gitui
 	/bin/ln -fs $(CURDIR)/gitui/theme.ron $(HOME)/.config/gitui/theme.ron
@@ -170,15 +170,11 @@ $(claude_bin): $(node_bin) $(rg_bin)
 	$(call header,Claude Code - Install)
 	curl -fsSL https://claude.ai/install.sh | bash
 
-$(claude_skills_dir)/%/SKILL.md:
-	$(call header,Claude Code - Install skill $(*))
-	mkdir -p $(dir $(@))
-	/bin/ln -fs $(CURDIR)/claude/skills/$(*)/SKILL.md $(@)
-
-claude: $(claude_bin) $(claude_skills) ## Install Claude Code
+claude: $(claude_bin) ## Install Claude Code
 	$(call header,Claude Code - Configure)
 	mkdir -p $(claude_dir)
 	/bin/ln -fs $(CURDIR)/claude/settings.json $(claude_dir)/settings.json
+	$(foreach s,$(claude_skill_names),mkdir -p $(claude_skills_dir)/$(s) && /bin/ln -fs $(CURDIR)/claude/skills/$(s)/SKILL.md $(claude_skills_dir)/$(s)/SKILL.md;)
 
 ###############################################################################
 # PostgreSQL
@@ -216,21 +212,15 @@ ssh_id_rsa := $(ssh_dir)/id_rsa
 $(ssh_dir):
 	mkdir -p $(@) && chmod 700 $(@)
 
-$(ssh_dir)/config: | $(ssh_dir)
+ssh: $(pass_bin) | $(ssh_dir) ## Configure SSH keys
 	$(call header,SSH - Decrypt config)
-	gpg -d $(CURDIR)/ssh/config.gpg > $(@) && chmod 600 $(@)
+	rm -f $(ssh_dir)/config && gpg -d $(CURDIR)/ssh/config.gpg > $(ssh_dir)/config && chmod 600 $(ssh_dir)/config
+	test -f $(ssh_id_ed25519) || (pass ssh/id_ed25519 > $(ssh_id_ed25519) && chmod 600 $(ssh_id_ed25519) && ssh-keygen -y -f $(ssh_id_ed25519) > $(ssh_id_ed25519).pub && chmod 644 $(ssh_id_ed25519).pub)
+	test -f $(ssh_id_rsa) || (pass ssh/id_rsa > $(ssh_id_rsa) && chmod 600 $(ssh_id_rsa) && ssh-keygen -y -f $(ssh_id_rsa) > $(ssh_id_rsa).pub && chmod 644 $(ssh_id_rsa).pub)
 
-$(ssh_id_ed25519): $(pass_bin) | $(ssh_dir)
-	$(call header,SSH - Install id_ed25519)
-	pass kborovik/ssh/id_ed25519 > $(@) && chmod 600 $(@)
-	ssh-keygen -y -f $(@) > $(@).pub && chmod 644 $(@).pub
-
-$(ssh_id_rsa): $(pass_bin) | $(ssh_dir)
-	$(call header,SSH - Install id_rsa)
-	pass kborovik/ssh/id_rsa > $(@) && chmod 600 $(@)
-	ssh-keygen -y -f $(@) > $(@).pub && chmod 644 $(@).pub
-
-ssh: $(ssh_dir)/config $(ssh_id_ed25519) $(ssh_id_rsa) ## Configure SSH keys
+ssh-save: ## Re-encrypt ~/.ssh/config to repo
+	$(call header,SSH - Encrypt config)
+	gpg -er E4AFCA7FBB19FC029D519A524AEBB5178D5E96C1 -o $(CURDIR)/ssh/config.gpg $(ssh_dir)/config
 
 ###############################################################################
 # Prompt

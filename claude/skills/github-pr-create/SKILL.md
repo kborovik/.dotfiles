@@ -76,17 +76,33 @@ Create a pull request from a GitHub issue number or a free-form objective descri
 
 ### Phase 2: Implement (after PR exists)
 
-3. **Use `/feature-dev:feature-dev` skill for implementation:**
+3. **Use `/code-development` skill for implementation:**
    - Invoke the skill with the PR objective/issue description as the argument
-   - The skill handles codebase investigation, architecture planning, and implementation
-   - Let it drive the full cycle: explore → plan → build → test
+   - The skill handles codebase exploration, clarifying questions, architecture design, and implementation
+   - Let it drive the full cycle: explore → ask → plan → build
 
-### Phase 3: Verify
+### Phase 3: Refine
+
+4. **Use `/code-simplification` skill on modified files:**
+   - Invoke the skill to clean up the implementation
+   - This preserves functionality while improving clarity and consistency
+
+### Phase 4: Review
+
+5. **Use `/code-review` skill on branch diff:**
+   - Invoke the skill with the branch name to review all changes against main
+   - Fix any Critical issues before proceeding
+   - Discuss Important issues with the user
+
+### Phase 5: Verify
 
 6. **Run verification gate:**
-   - Run `make check && make clean && make e2e` after major code changes
+   - Run `make check` (or project-specific verification sequence) after major code changes
+   - If no verification target exists, inform the user and suggest creating one
    - Must pass before the PR is considered complete
    - If the tests fail, diagnose from the output and fix until they pass
+
+### Phase 6: Finalize
 
 7. **Post model insights as PR comment:**
    - After implementation, add a comment to the PR with any notable insights discovered during the work
@@ -103,9 +119,7 @@ Create a pull request from a GitHub issue number or a free-form objective descri
 
 - Always create a regular PR (do not use `--draft`)
 - Keep branch names concise but descriptive
-- Investigation should be thorough before planning
-- Plan must be actionable with clear steps
 - When from an issue: always link PR with "Resolves #<number>" in the body
 - When from an objective: PR body should contain enough context for reviewers
-- Start implementing immediately after plan approval — no confirmation pauses
-- Success is measured by `make check && make clean && make e2e` passing — this is the ultimate acceptance gate
+- The code-development skill handles its own interactive checkpoints — let it drive
+- Success is measured by the verification gate passing and code-review finding no Critical issues

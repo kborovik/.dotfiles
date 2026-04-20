@@ -45,7 +45,13 @@ Merge the current branch's PR into main with a detailed, release-note-ready comm
    - Review the actual diff: `gh pr diff`
    - Identify the scope: bug fix, feature, enhancement, refactor, etc.
 
-4. **Update PR description to reflect completed work:**
+4. **Run code review on the PR diff:**
+   - Use `/code-review` skill with the PR number to review all changes
+   - Present findings to the user
+   - If Critical issues are found, inform the user and do not proceed with merge until resolved
+   - For Important issues, ask the user if they want to address them or proceed
+
+5. **Update PR description to reflect completed work:**
    - Compare the current PR body (from step 1) against the actual diff and commit history
    - The PR description is often outdated — it may reflect the original plan rather than what was actually implemented
    - Update the PR description to accurately reflect the final state of the work:
@@ -61,7 +67,7 @@ Merge the current branch's PR into main with a detailed, release-note-ready comm
      - Any additional work done beyond the original scope is included
    - Skip this step if the description already matches the actual changes
 
-5. **Generate release-note-ready commit message:**
+6. **Generate release-note-ready commit message:**
    - Title: Conventional Commits format from PR title with PR number -- `type(area): concise imperative description (#42)`
      - **type**: `fix`, `feat`, `refactor`, `chore`, `docs`, `test`
      - **area**: affected module (`gmail`, `missions`, `cli`, `e2e`, `server`, `contacts`, `calendar`, `schema`, `config`, `llm`)
@@ -72,7 +78,7 @@ Merge the current branch's PR into main with a detailed, release-note-ready comm
      - **Breaking Changes**: Note any breaking changes (if applicable)
    - Format for squash merge
 
-6. **Post model insights as PR comment:**
+7. **Post model insights as PR comment:**
    - Before merging, add a comment to the PR with any notable insights from the analysis
    - Use `gh pr comment <number> --body "$(cat <<'EOF'...EOF)"`
    - Include any of the following that apply:
@@ -82,7 +88,7 @@ Merge the current branch's PR into main with a detailed, release-note-ready comm
      - Edge cases or considerations for the release
    - Keep the comment concise and actionable — skip this step if there are no meaningful insights
 
-7. **Merge the PR:**
+8. **Merge the PR:**
    - Use squash merge with `-d` to delete branch automatically:
      ```bash
      gh pr merge <number> -s -d -t "<title>" -b "$(cat <<'EOF'
@@ -95,14 +101,14 @@ Merge the current branch's PR into main with a detailed, release-note-ready comm
      - Rebase: `gh pr merge <number> -r -d`
    - For repos with merge queues, use `--auto` to queue when checks pass
 
-8. **Clean up branches:**
+9. **Clean up branches:**
    - The `-d` flag handles remote branch deletion
    - Switch to main: `git checkout main`
    - Pull latest: `git pull origin main`
    - Delete local branch if still exists: `git branch -d <branch-name>`
    - Prune stale remote refs: `git fetch --prune`
 
-9. **Confirm completion:**
+10. **Confirm completion:**
    - Show the merge commit: `git log -1`
    - Output the merged PR URL
    - Display the commit message for release notes

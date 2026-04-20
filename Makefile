@@ -159,7 +159,7 @@ claude_dir := $(HOME)/.claude
 node_bin := /opt/homebrew/bin/node
 rg_bin := /opt/homebrew/bin/rg
 
-claude_skill_names := github-commit-staged github-issue-create github-pr-create github-pr-merge
+claude_skill_names := github-commit-staged github-issue-create github-pr-create github-pr-merge code-development code-review code-simplification
 claude_skills_dir := $(claude_dir)/skills
 claude_skills := $(foreach s,$(claude_skill_names),$(claude_skills_dir)/$(s)/SKILL.md)
 

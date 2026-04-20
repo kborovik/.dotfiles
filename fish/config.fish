@@ -22,7 +22,7 @@ if status is-interactive
     set --global --export EDITOR vim
     set --global --export VISUAL vim
     set --global --export PAGER "less -R -F -i"
-    set --global --export GLAMOUR_STYLE ~/.shell/glamour/glamour-custom.json
+    set --global --export GLAMOUR_STYLE ~/.dotfiles/glamour/glamour-custom.json
 
     set --global __fish_git_prompt_show_informative_status true
     set --global __fish_git_prompt_showcolorhints true

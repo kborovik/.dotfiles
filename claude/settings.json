@@ -1,9 +1,7 @@
 {
   "includeCoAuthoredBy": false,
   "permissions": {
-    "allow": [
-      "WebSearch"
-    ],
+    "allow": ["WebSearch"],
     "deny": [],
     "ask": []
   },
@@ -23,7 +21,8 @@
       "source": {
         "source": "github",
         "repo": "pydantic/skills"
-      }
+      },
+      "autoUpdate": true
     }
   },
   "effortLevel": "high",

@@ -1,7 +1,7 @@
 .SILENT:
 .EXPORT_ALL_VARIABLES:
 .PHONY: default help init base tools zed claude pgsql ssh
-.PHONY: fish gpg git vim gitui bat glamour
+.PHONY: fish gpg git vim gitui glamour
 .PHONY: git-credentials-load git-credentials-save commit prompt ssh-save
 
 MAKEFLAGS += --no-builtin-rules --no-builtin-variables
@@ -139,14 +139,6 @@ base: tools $(fish_bin) $(gpg_bin) $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin
 	/bin/ln -fs $(CURDIR)/gitui/key_bindings.ron $(HOME)/.config/gitui/key_bindings.ron
 	mkdir -p $(HOME)/.gnupg && chmod 700 $(HOME)/.gnupg
 	/bin/ln -fs $(CURDIR)/gnupg/gpg.conf $(HOME)/.gnupg/gpg.conf
-	rm -rf $(HOME)/.config/bat && /bin/ln -fs $(CURDIR)/bat $(HOME)/.config/bat
-
-###############################################################################
-# Bat
-###############################################################################
-
-bat: $(bat_bin) ## Install and configure bat
-	$(call header,Bat - Configure)
 	rm -rf $(HOME)/.config/bat && /bin/ln -fs $(CURDIR)/bat $(HOME)/.config/bat
 	bat cache --build
 

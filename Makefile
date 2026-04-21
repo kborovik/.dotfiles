@@ -61,6 +61,7 @@ riff_bin := /opt/homebrew/bin/riff
 vim_bin := /opt/homebrew/bin/vim
 gitui_bin := /opt/homebrew/bin/gitui
 glow_bin := /opt/homebrew/bin/glow
+bat_bin := /opt/homebrew/bin/bat
 tree_bin := /opt/homebrew/bin/tree
 
 $(coreutils_bin):
@@ -115,13 +116,17 @@ $(glow_bin):
 	$(call header,glow - Install)
 	brew install glow
 
+$(bat_bin):
+	$(call header,bat - Install)
+	brew install bat
+
 $(tree_bin):
 	$(call header,tree - Install)
 	brew install tree
 
 tools: $(coreutils_bin) $(sed_bin) $(gmake_bin) $(jq_bin) $(pass_bin) $(gh_bin) $(tree_bin)
 
-base: tools $(fish_bin) $(gpg_bin) $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin) $(glow_bin) ## Install base tools and configs
+base: tools $(fish_bin) $(gpg_bin) $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin) $(glow_bin) $(bat_bin) ## Install base tools and configs
 	$(call header,Base - Configure)
 	rm -f $(HOME)/.config/fish && /bin/ln -fs $(CURDIR)/fish $(HOME)/.config/fish
 	/bin/ln -fs $(CURDIR)/gitconfig $(HOME)/.gitconfig
@@ -132,6 +137,16 @@ base: tools $(fish_bin) $(gpg_bin) $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin
 	/bin/ln -fs $(CURDIR)/gitui/key_bindings.ron $(HOME)/.config/gitui/key_bindings.ron
 	mkdir -p $(HOME)/.gnupg && chmod 700 $(HOME)/.gnupg
 	/bin/ln -fs $(CURDIR)/gnupg/gpg.conf $(HOME)/.gnupg/gpg.conf
+	rm -rf $(HOME)/.config/bat && /bin/ln -fs $(CURDIR)/bat $(HOME)/.config/bat
+
+###############################################################################
+# Bat
+###############################################################################
+
+bat: $(bat_bin) ## Install and configure bat
+	$(call header,Bat - Configure)
+	rm -rf $(HOME)/.config/bat && /bin/ln -fs $(CURDIR)/bat $(HOME)/.config/bat
+	bat cache --build
 
 ###############################################################################
 # Zed Editor

@@ -140,7 +140,7 @@ base: tools $(fish_bin) $(gpg_bin) $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin
 	mkdir -p $(HOME)/.gnupg && chmod 700 $(HOME)/.gnupg
 	/bin/ln -fs $(CURDIR)/gnupg/gpg.conf $(HOME)/.gnupg/gpg.conf
 	rm -rf $(HOME)/.config/bat && /bin/ln -fs $(CURDIR)/bat $(HOME)/.config/bat
-	bat cache --build
+	bat cache --build >/dev/null
 
 ###############################################################################
 # Zed Editor

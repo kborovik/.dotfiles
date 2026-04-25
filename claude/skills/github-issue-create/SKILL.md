@@ -46,11 +46,18 @@ Create a GitHub issue by investigating the codebase first to gather context.
      - **Acceptance Criteria**: Clear, testable requirements
      - **Affected Files**: List of files that may need changes
 
-6. **Create the issue:**
-   - Use `gh issue create --title "..." --body "$(cat <<'EOF'...EOF)"`
+6. **Determine labels:**
+   - Run `gh label list` to see what labels exist in this repo — never invent labels that don't exist
+   - Pick every label that genuinely applies. At minimum, select one that reflects the issue type (e.g. `bug`, `enhancement`, `refactor`, `documentation`)
+   - Also apply area/scope labels when the repo defines them (e.g. `gmail`, `cli`, `schema`)
+   - If no existing label matches the issue type, ask the user before creating a new one with `gh label create`
+
+7. **Create the issue:**
+   - Use `gh issue create --title "..." --label "label1" --label "label2" --body "$(cat <<'EOF'...EOF)"`
+   - Pass each label as a separate `--label` flag (or comma-separate them in a single `--label` value)
    - Output the issue URL and number
 
-7. **Post model insights as issue comment:**
+8. **Post model insights as issue comment:**
    - After creating the issue, add a comment with any notable insights from the investigation
    - Use `gh issue comment <number> --body "$(cat <<'EOF'...EOF)"`
    - Include any of the following that apply:

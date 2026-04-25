@@ -53,9 +53,9 @@ Create a pull request from a GitHub issue number or a free-form objective descri
 - Slugify: lowercase, replace spaces with hyphens, remove special chars, max 50 chars
 - Create branch and PR:
   - Ensure starting from main: `git checkout main && git pull origin main`
-  - Create branch: `git checkout -b <issue-number>-<slugified-title>`
-  - Empty commit: `git commit --allow-empty -m "wip: <issue-title> (#<issue-number>)"`
-  - Push: `git push -u origin <branch-name>`
+  - Create branch: `git switch --create <issue-number>-<slugified-title>`
+  - Empty commit: `git commit --allow-empty --message "wip: <issue-title> (#<issue-number>)"`
+  - Push: `git push --set-upstream origin <branch-name>`
   - Create regular PR: `gh pr create --title "..." --body "$(cat <<'EOF'...EOF)"`
   - Output the PR URL
 
@@ -68,9 +68,9 @@ Create a pull request from a GitHub issue number or a free-form objective descri
 - Slugify title: lowercase, replace spaces with hyphens, remove special chars, max 50 chars
 - Create branch and PR:
   - Ensure starting from main: `git checkout main && git pull origin main`
-  - Create branch with temporary name: `git checkout -b <slugified-title>`
-  - Empty commit: `git commit --allow-empty -m "wip: <PR title>"`
-  - Push: `git push -u origin <slugified-title>`
+  - Create branch with temporary name: `git switch --create <slugified-title>`
+  - Empty commit: `git commit --allow-empty --message "wip: <PR title>"`
+  - Push: `git push --set-upstream origin <slugified-title>`
   - Create regular PR: `gh pr create --title "..." --body "$(cat <<'EOF'...EOF)"`
   - Extract the PR number from the output URL
 

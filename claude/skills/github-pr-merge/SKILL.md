@@ -83,23 +83,23 @@ Merge the current branch's PR into main with a detailed, release-note-ready comm
    - Keep the comment concise and actionable — skip this step if there are no meaningful insights
 
 7. **Merge the PR:**
-   - Use squash merge with `-d` to delete branch automatically:
+   - Use squash merge with `--delete-branch` to delete branch automatically:
      ```bash
-     gh pr merge <number> -s -d -t "<title>" -b "$(cat <<'EOF'
+     gh pr merge <number> --squash --delete-branch --subject "<title>" --body "$(cat <<'EOF'
      <body>
      EOF
      )"
      ```
    - Alternative merge strategies:
-     - Merge commit: `gh pr merge <number> -m -d`
-     - Rebase: `gh pr merge <number> -r -d`
+     - Merge commit: `gh pr merge <number> --merge --delete-branch`
+     - Rebase: `gh pr merge <number> --rebase --delete-branch`
    - For repos with merge queues, use `--auto` to queue when checks pass
+   - Always pass `--delete-branch` explicitly — never rely on the short form `-d` or omit it
 
 8. **Clean up branches:**
-   - The `-d` flag handles remote branch deletion
+   - The `--delete-branch` flag on `gh pr merge` deletes both local and remote branches for the merged PR
    - Switch to main: `git checkout main`
    - Pull latest: `git pull origin main`
-   - Delete local branch if still exists: `git branch -d <branch-name>`
    - Prune stale remote refs: `git fetch --prune`
 
 9. **Confirm completion:**
@@ -132,7 +132,7 @@ Users can now log in and receive tokens that expire after 24 hours.
 - Always use squash merge for clean history (unless repo prefers merge commits)
 - Use Conventional Commits format with PR number: `type(area): description (#number)`
 - Commit message must be suitable for release notes
-- Use `-d` flag to clean up branches automatically
+- Use `--delete-branch` flag to clean up branches automatically
 - Verify all checks pass before merging
 - Never force merge if checks are failing
 - For draft PRs, confirm with user before marking ready

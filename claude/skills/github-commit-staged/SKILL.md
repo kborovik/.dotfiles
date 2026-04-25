@@ -21,7 +21,7 @@ Commit the currently staged changes with a well-crafted commit message.
    - Understand the purpose and scope of changes
 
 3. **Check repository commit style:**
-   - Run `git log --oneline -10` to see recent commit message patterns
+   - Run `git log --oneline --max-count=10` to see recent commit message patterns
    - Match the existing style (prefixes, capitalization, format)
 
 4. **Generate commit message:**
@@ -34,7 +34,7 @@ Commit the currently staged changes with a well-crafted commit message.
 5. **Create the commit:**
    - Use heredoc format for proper formatting:
      ```
-     git commit -m "$(cat <<'EOF'
+     git commit --message "$(cat <<'EOF'
      <title>
 
      <optional body>
@@ -44,7 +44,7 @@ Commit the currently staged changes with a well-crafted commit message.
 
 6. **Verify the commit:**
    - Run `git status` to confirm clean state
-   - Run `git log -1` to show the created commit
+   - Run `git log --max-count=1` to show the created commit
 
 ## Commit Message Format
 

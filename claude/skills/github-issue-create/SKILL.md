@@ -6,32 +6,34 @@ model: opus
 allowed-tools: Bash(gh *), Read, Grep, Glob
 ---
 
-Create a GitHub issue by investigating the codebase first to gather context.
+> Notation: terse. See [legend](../legend/SKILL.md) for symbols (`!`, `⊥`, `→`, `∀`, `>`).
+
+Create GitHub issue. Investigate codebase first for context.
 
 ## Process
 
-1. **Parse the issue description from $ARGUMENTS**
-   - If no description provided, ask user what issue they want to create
+1. **Parse $ARGUMENTS**
+   - No description → ask user
 
-2. **Investigate the codebase based on the description:**
-   - Search for relevant files using Grep/Glob
-   - Read related code to understand current implementation
+2. **Investigate codebase:**
+   - Search relevant files via Grep / Glob
+   - Read related code → understand current implementation
    - Check git log for recent changes in affected areas
-   - Identify affected components/modules
+   - Identify affected components / modules
 
-3. **Gather issue details:**
-   - Determine issue type: bug, feature, enhancement, refactor
-   - Identify affected files and code paths
-   - For bugs: look for error patterns, failing conditions
-   - For features: identify where changes would be needed
+3. **Gather details:**
+   - Type: bug, feature, enhancement, refactor
+   - Affected files & code paths
+   - Bugs → look for error patterns, failing conditions
+   - Features → identify where changes needed
 
 4. **Ask clarifying questions if needed:**
-   - Use AskUserQuestion for ambiguous requirements
+   - AskUserQuestion for ambiguous requirements
    - Confirm scope if investigation reveals multiple approaches
-   - Ask for reproduction steps if reporting a bug
+   - Bug → ask for repro steps
 
-5. **Generate issue content:**
-   - Title: Conventional Commits format -- `type(area): concise imperative description`
+5. **Generate content:**
+   - Title: Conventional Commits — `type(area): concise imperative description`
      - **type**: `fix`, `feat`, `refactor`, `chore`, `docs`, `test`
      - **area**: affected module (`gmail`, `missions`, `cli`, `e2e`, `server`, `contacts`, `calendar`, `schema`, `config`, `llm`)
      - Examples:
@@ -41,36 +43,36 @@ Create a GitHub issue by investigating the codebase first to gather context.
        - `chore(cli): Remove deprecated debug_modules setting`
    - Body sections:
      - **Summary**: 2-3 sentence description
-     - **Context**: Relevant code paths and files found during investigation
-     - **Proposed Solution** (if applicable): Based on codebase analysis
-     - **Acceptance Criteria**: Clear, testable requirements
-     - **Affected Files**: List of files that may need changes
+     - **Context**: Relevant code paths & files from investigation
+     - **Proposed Solution** (if applicable): based on codebase analysis
+     - **Acceptance Criteria**: clear, testable
+     - **Affected Files**: list of files that may need changes
 
 6. **Determine labels:**
-   - Run `gh label list` to see what labels exist in this repo — never invent labels that don't exist
-   - Pick every label that genuinely applies. At minimum, select one that reflects the issue type (e.g. `bug`, `enhancement`, `refactor`, `documentation`)
-   - Also apply area/scope labels when the repo defines them (e.g. `gmail`, `cli`, `schema`)
-   - If no existing label matches the issue type, ask the user before creating a new one with `gh label create`
+   - `gh label list` → see existing labels. ⊥ invent new ones
+   - Pick every label that genuinely applies. At minimum: one type label (e.g. `bug`, `enhancement`, `refactor`, `documentation`)
+   - Apply area / scope labels when defined (e.g. `gmail`, `cli`, `schema`)
+   - No matching type label → ask user before `gh label create`
 
-7. **Create the issue:**
-   - Use `gh issue create --title "..." --label "label1" --label "label2" --body "$(cat <<'EOF'...EOF)"`
-   - Pass each label as a separate `--label` flag (or comma-separate them in a single `--label` value)
-   - Output the issue URL and number
+7. **Create issue:**
+   - `gh issue create --title "..." --label "label1" --label "label2" --body "$(cat <<'EOF'...EOF)"`
+   - Each label as separate `--label` flag (or comma-separated in single value)
+   - Output URL & number
 
-8. **Post model insights as issue comment:**
-   - After creating the issue, add a comment with any notable insights from the investigation
-   - Use `gh issue comment <number> --body "$(cat <<'EOF'...EOF)"`
-   - Include any of the following that apply:
-     - Deeper architectural context discovered during investigation
-     - Related code patterns or dependencies that may not be obvious
-     - Potential risks or complexity that could affect implementation
-     - Alternative approaches or considerations worth noting
-   - Keep the comment concise and actionable — skip this step if there are no meaningful insights
+8. **Post insights as comment:**
+   - After creating → add comment with notable insights
+   - `gh issue comment <number> --body "$(cat <<'EOF'...EOF)"`
+   - Include any of:
+     - Architectural context discovered
+     - Related code patterns / dependencies not obvious
+     - Risks or complexity affecting implementation
+     - Alternative approaches worth noting
+   - Concise & actionable. Skip if no meaningful insights.
 
 ## Requirements
 
-- Investigate before asking questions - gather context first
-- Keep investigation focused on the issue description
-- Don't create overly long issues - be concise
-- Use markdown formatting in issue body
-- Reference specific files/line numbers when relevant
+- Investigate before asking — gather context first
+- Keep investigation focused on description
+- ⊥ overly long issues — be concise
+- Markdown formatting in body
+- Reference specific files / line numbers when relevant

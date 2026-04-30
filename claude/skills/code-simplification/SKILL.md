@@ -13,62 +13,64 @@ allowed-tools: Read, Grep, Glob, Edit, Bash(git diff *)
 
 # Code Simplification
 
-Refine code for clarity, consistency, and maintainability. Never change what the code does — only how it expresses it. The goal is code that is easier to read, understand, and extend.
+> Notation: terse. See [legend](../legend/SKILL.md) for symbols (`!`, `⊥`, `→`, `∀`, `>`).
+
+Refine for clarity, consistency, maintainability. ⊥ change behavior — only how it's expressed. Goal: easier to read, understand, extend.
 
 ## Scope
 
-Determine what to simplify based on $ARGUMENTS:
+Determine from $ARGUMENTS:
 
-- **No argument:** Simplify recently modified files (`git diff --name-only` for unstaged, plus `git diff --cached --name-only` for staged)
-- **File paths:** Simplify the specified files
-- **"all":** Broader scope — check the user's intent before touching many files
+- **No argument:** recently modified files (`git diff --name-only` unstaged + `git diff --cached --name-only` staged)
+- **File paths:** those files
+- **"all":** broader scope — confirm intent before touching many files
 
-If no files have recent modifications and no argument was given, inform the user and exit.
+If no recent modifications & no argument → inform user & exit.
 
 ## What to Simplify
 
 **Reduce Complexity**
 
-- Flatten deeply nested conditionals (early returns, guard clauses)
-- Replace complex boolean expressions with named variables
-- Break long functions into smaller ones only when a natural boundary exists — not as a reflex
+- Flatten nested conditionals (early returns, guard clauses)
+- Replace complex booleans with named variables
+- Break long functions only at natural boundaries — not as reflex
 - Simplify control flow (switch over chained if/else when clearer)
 
 **Eliminate Redundancy**
 
-- Remove dead code and unused variables
-- Consolidate duplicate logic (but only when 3+ repetitions justify it — two similar lines are fine)
-- Remove unnecessary intermediate variables that don't add clarity
-- Strip comments that describe obvious code
+- Remove dead code & unused variables
+- Consolidate duplicates only at 3+ repetitions — two similar lines are fine
+- Drop intermediate variables that don't add clarity
+- Strip comments describing obvious code
 
 **Improve Naming**
 
-- Rename unclear variables and functions to express intent
-- Use domain terminology consistently
-- Make boolean names read as questions (`is_valid`, `has_permission`)
+- Rename unclear variables / functions to express intent
+- Use domain terms consistently
+- Booleans read as questions (`is_valid`, `has_permission`)
 
 **Apply Conventions**
 
-- Follow project standards from CLAUDE.md if it exists
-- Default to Python conventions when no project standard is set:
+- Follow CLAUDE.md if exists
+- Default Python:
   - Sorted imports (stdlib, third-party, local)
-  - Type hints on function signatures
-  - Prefer explicit over implicit
-  - Avoid nested ternaries — use if/else or match/case
-  - Prefer `pathlib.Path` over `os.path`
+  - Type hints on signatures
+  - Explicit > implicit
+  - ⊥ nested ternaries — use if/else or match/case
+  - `pathlib.Path` > `os.path`
 
 ## What NOT to Do
 
-- Never change behavior or outputs
-- Don't create premature abstractions — three similar lines are better than a forced helper
-- Don't over-compress code — clarity beats brevity
-- Don't add features, error handling, or validation beyond what exists
-- Don't touch code outside the specified scope
-- Don't add docstrings or type hints to code you didn't otherwise change
+- ⊥ change behavior or outputs
+- ⊥ premature abstractions — three similar lines > forced helper
+- ⊥ over-compress — clarity > brevity
+- ⊥ add features, error handling, validation beyond what exists
+- ⊥ touch code outside scope
+- ⊥ add docstrings or type hints to code you didn't otherwise change
 
 ## Process
 
-1. Identify files in scope.
-2. Read each file and identify simplification opportunities.
-3. Apply changes directly using Edit. Make each edit small and focused.
-4. After all edits, present a brief summary: what changed and why, grouped by file.
+1. Identify in-scope files.
+2. Read each, identify simplifications.
+3. Apply via Edit. Small, focused edits.
+4. After all edits → brief summary: what changed & why, grouped by file.

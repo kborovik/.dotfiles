@@ -6,33 +6,35 @@ model: sonnet
 allowed-tools: Bash(git *), Bash(git status)
 ---
 
-Commit the currently staged changes with a well-crafted commit message.
+> Notation: terse. See [legend](../legend/SKILL.md) for symbols (`!`, `⊥`, `→`, `∀`, `>`).
+
+Commit staged changes with well-crafted message.
 
 ## Process
 
-1. **Check for staged changes:**
-   - Run `git diff --cached --stat` to see what's staged
-   - If nothing staged, inform user and exit
-   - If $ARGUMENTS provided, use it as context/hint for commit message
+1. **Check staged changes:**
+   - `git diff --cached --stat` to see what's staged
+   - Nothing staged → inform user & exit
+   - $ARGUMENTS provided → use as hint
 
-2. **Analyze the changes:**
-   - Run `git diff --staged` to review actual code changes
-   - Identify what was added, modified, or removed
-   - Understand the purpose and scope of changes
+2. **Analyze changes:**
+   - `git diff --staged` to review
+   - Identify added / modified / removed
+   - Understand purpose & scope
 
-3. **Check repository commit style:**
-   - Run `git log --oneline --max-count=10` to see recent commit message patterns
-   - Match the existing style (prefixes, capitalization, format)
+3. **Check repo style:**
+   - `git log --oneline --max-count=10` for recent patterns
+   - Match existing style (prefixes, capitalization, format)
 
-4. **Generate commit message:**
-   - Title: Conventional Commits format -- `type(area): concise imperative description`
+4. **Generate message:**
+   - Title: Conventional Commits — `type(area): concise imperative description`
      - **type**: `fix`, `feat`, `refactor`, `chore`, `docs`, `test`
      - **area**: affected module (`gmail`, `missions`, `cli`, `e2e`, `server`, `contacts`, `calendar`, `schema`, `config`, `llm`)
-   - Keep title under 72 characters
-   - For complex changes, add body after blank line with details
+   - Title ≤ 72 chars
+   - Complex changes: body after blank line
 
-5. **Create the commit:**
-   - Use heredoc format for proper formatting:
+5. **Create commit:**
+   - Heredoc for proper formatting:
      ```
      git commit --message "$(cat <<'EOF'
      <title>
@@ -42,18 +44,18 @@ Commit the currently staged changes with a well-crafted commit message.
      )"
      ```
 
-6. **Verify the commit:**
-   - Run `git status` to confirm clean state
-   - Run `git log --max-count=1` to show the created commit
+6. **Verify:**
+   - `git status` → confirm clean state
+   - `git log --max-count=1` → show created commit
 
 ## Commit Message Format
 
-Simple change:
+Simple:
 ```
 fix(server): add validation for email input
 ```
 
-Complex change with body:
+With body:
 ```
 refactor(server): replace session-based auth with JWT tokens
 
@@ -65,9 +67,9 @@ refactor(server): replace session-based auth with JWT tokens
 
 ## Requirements
 
-- Use Conventional Commits format: `type(area): imperative description`
-- Title should complete: "This commit will..."
-- Only commit what's already staged (don't stage additional files)
-- Don't push unless explicitly requested
-- Match existing repository commit style when possible
+- Conventional Commits: `type(area): imperative description`
+- Title completes: "This commit will..."
+- ! Only commit what's staged (don't stage more)
+- ⊥ push unless explicitly requested
+- Match repo style when possible
 - Reference issue numbers if relevant (e.g., "fix login bug (#42)")

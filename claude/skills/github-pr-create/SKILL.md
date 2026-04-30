@@ -6,7 +6,9 @@ model: opus
 allowed-tools: Bash(git *), Bash(gh *), Bash(make *), Read, Grep, Glob, Edit, Write
 ---
 
-Create a pull request from a GitHub issue number or a free-form objective description.
+> Notation: terse. See [legend](../legend/SKILL.md) for symbols (`!`, `⊥`, `→`, `∀`, `>`).
+
+Create PR from issue number or free-form objective.
 
 ## gh pr create Flags Reference
 
@@ -33,93 +35,93 @@ Create a pull request from a GitHub issue number or a free-form objective descri
 
 ## Process
 
-### Phase 1: Parse input and create PR
+### Phase 1: Parse input & create PR
 
 1. **Determine input type from $ARGUMENTS:**
-   - If no argument provided: use AskUserQuestion to ask for a GitHub issue number to work on
-   - If argument is a number: treat as GitHub issue number (go to step 2a)
-   - If argument is text: treat as free-form objective (go to step 2b)
+   - No argument → AskUserQuestion for issue number
+   - Number → issue number (step 2a)
+   - Text → free-form objective (step 2b)
 
-2a. **From issue number — fetch issue details:**
+2a. **From issue number — fetch details:**
 
-- Fetch issue: `gh issue view <number>`
-- Extract issue title, body, and labels
-- PR title: Conventional Commits format matching the issue -- `type(area): concise imperative description`
+- `gh issue view <number>`
+- Extract title, body, labels
+- PR title: Conventional Commits matching issue — `type(area): concise imperative description`
   - **type**: `fix`, `feat`, `refactor`, `chore`, `docs`, `test`
   - **area**: affected module (`gmail`, `missions`, `cli`, `e2e`, `server`, `contacts`, `calendar`, `schema`, `config`, `llm`)
-  - Derive from the issue title; if the issue already uses this format, reuse it directly
-- PR body: include `Resolves #<number>` to auto-close the issue
-- Branch name format: `<issue-number>-<slugified-title>` (e.g., `42-add-rate-limiting`)
-- Slugify: lowercase, replace spaces with hyphens, remove special chars, max 50 chars
-- Create branch and PR:
-  - Ensure starting from main: `git checkout main && git pull origin main`
-  - Create branch: `git switch --create <issue-number>-<slugified-title>`
+  - Derive from issue title; reuse directly if issue already uses format
+- Body: include `Resolves #<number>` to auto-close issue
+- Branch name: `<issue-number>-<slugified-title>` (e.g., `42-add-rate-limiting`)
+- Slugify: lowercase, spaces → hyphens, strip special chars, max 50 chars
+- Create branch & PR:
+  - Start from main: `git checkout main && git pull origin main`
+  - Branch: `git switch --create <issue-number>-<slugified-title>`
   - Empty commit: `git commit --allow-empty --message "wip: <issue-title> (#<issue-number>)"`
   - Push: `git push --set-upstream origin <branch-name>`
-  - Create regular PR: `gh pr create --title "..." --body "$(cat <<'EOF'...EOF)"`
-  - Output the PR URL
+  - Regular PR: `gh pr create --title "..." --body "$(cat <<'EOF'...EOF)"`
+  - Output URL
 
 2b. **From free-form objective:**
 
-- Generate a PR title in Conventional Commits format from the objective -- `type(area): concise imperative description`
+- Generate Conventional Commits title from objective — `type(area): concise imperative description`
   - **type**: `fix`, `feat`, `refactor`, `chore`, `docs`, `test`
   - **area**: affected module (`gmail`, `missions`, `cli`, `e2e`, `server`, `contacts`, `calendar`, `schema`, `config`, `llm`)
-- Do NOT investigate the codebase yet — derive the title directly from the objective
-- Slugify title: lowercase, replace spaces with hyphens, remove special chars, max 50 chars
-- Create branch and PR:
-  - Ensure starting from main: `git checkout main && git pull origin main`
-  - Create branch with temporary name: `git switch --create <slugified-title>`
+- ⊥ investigate codebase yet — derive title directly from objective
+- Slugify: lowercase, spaces → hyphens, strip special chars, max 50 chars
+- Create branch & PR:
+  - Start from main: `git checkout main && git pull origin main`
+  - Branch w/ temp name: `git switch --create <slugified-title>`
   - Empty commit: `git commit --allow-empty --message "wip: <PR title>"`
   - Push: `git push --set-upstream origin <slugified-title>`
-  - Create regular PR: `gh pr create --title "..." --body "$(cat <<'EOF'...EOF)"`
-  - Extract the PR number from the output URL
+  - Regular PR: `gh pr create --title "..." --body "$(cat <<'EOF'...EOF)"`
+  - Extract PR number from output URL
 
 ### Phase 2: Implement (after PR exists)
 
-3. **Use `/code-development` skill for implementation:**
-   - Invoke the skill with the PR objective/issue description as the argument
-   - The skill handles codebase exploration, clarifying questions, architecture design, and implementation
-   - Let it drive the full cycle: explore → ask → plan → build
+3. **Use `/code-development` skill:**
+   - Invoke w/ PR objective / issue description as argument
+   - Skill handles exploration, clarifying questions, architecture, implementation
+   - Let it drive: explore → ask → plan → build
 
 ### Phase 3: Refine
 
-4. **Use `/code-simplification` skill on modified files:**
-   - Invoke the skill to clean up the implementation
-   - This preserves functionality while improving clarity and consistency
+4. **Use `/code-simplification` on modified files:**
+   - Cleans up implementation
+   - Preserves functionality, improves clarity & consistency
 
 ### Phase 4: Review
 
-5. **Use `/code-review` skill on branch diff:**
-   - Invoke the skill with the branch name to review all changes against main
-   - Fix any Critical issues before proceeding
-   - Discuss Important issues with the user
+5. **Use `/code-review` on branch diff:**
+   - Invoke w/ branch name → review all changes vs main
+   - Fix Critical issues before proceeding
+   - Discuss Important issues w/ user
 
 ### Phase 5: Verify
 
 6. **Run verification gate:**
-   - Run `make check` (or project-specific verification sequence) after major code changes
-   - If no verification target exists, inform the user and suggest creating one
-   - Must pass before the PR is considered complete
-   - If the tests fail, diagnose from the output and fix until they pass
+   - `make check` (or project-specific) after major changes
+   - No verification target → inform user, suggest creating one
+   - ! Must pass before PR considered complete
+   - Tests fail → diagnose & fix until pass
 
 ### Phase 6: Finalize
 
-7. **Post model insights as PR comment:**
-   - After implementation, add a comment to the PR with any notable insights discovered during the work
-   - Use `gh pr comment <number> --body "$(cat <<'EOF'...EOF)"`
-   - Include any of the following that apply:
-     - Architectural observations or design decisions made
-     - Technical debt discovered or trade-offs chosen
-     - Edge cases identified and how they were handled
-     - Alternative approaches considered and why they were rejected
-     - Potential risks or areas that may need future attention
-   - Keep the comment concise and actionable — skip this step if there are no meaningful insights
+7. **Post insights as PR comment:**
+   - After implementation → comment with notable insights
+   - `gh pr comment <number> --body "$(cat <<'EOF'...EOF)"`
+   - Include any of:
+     - Architectural observations / design decisions
+     - Tech debt discovered or trade-offs chosen
+     - Edge cases identified & how handled
+     - Alternatives considered & why rejected
+     - Risks or future-attention areas
+   - Concise & actionable. Skip if no meaningful insights.
 
 ## Requirements
 
-- Always create a regular PR (do not use `--draft`)
-- Keep branch names concise but descriptive
-- When from an issue: always link PR with "Resolves #<number>" in the body
-- When from an objective: PR body should contain enough context for reviewers
-- The code-development skill handles its own interactive checkpoints — let it drive
-- Success is measured by the verification gate passing and code-review finding no Critical issues
+- ! Always regular PR (⊥ `--draft`)
+- Branch names concise but descriptive
+- From issue → ! "Resolves #<number>" in body
+- From objective → body must contain enough context for reviewers
+- code-development skill drives its own checkpoints — let it
+- Success = verification gate passes & code-review finds no Critical issues

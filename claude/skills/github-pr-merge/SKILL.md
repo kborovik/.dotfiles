@@ -6,7 +6,9 @@ model: sonnet
 allowed-tools: Bash(git *), Bash(gh *)
 ---
 
-Merge the current branch's PR into main with a detailed, release-note-ready commit message.
+> Notation: terse. See [legend](../legend/SKILL.md) for symbols (`!`, `⊥`, `→`, `∀`, `>`).
+
+Merge current branch's PR into main with detailed, release-note-ready commit message.
 
 ## gh pr merge Flags Reference
 
@@ -26,86 +28,86 @@ Merge the current branch's PR into main with a detailed, release-note-ready comm
 
 ## Process
 
-1. **Identify the PR to merge:**
-   - If $ARGUMENTS provided, use as PR number
-   - Otherwise, get PR for current branch: `gh pr view --json number,title,body,url`
-   - If no PR exists, inform user and exit
+1. **Identify PR:**
+   - $ARGUMENTS provided → use as PR number
+   - Else current branch's PR: `gh pr view --json number,title,body,url`
+   - No PR → inform user & exit
 
-2. **Verify PR is ready to merge:**
+2. **Verify ready to merge:**
    - Check remote status:
      - `gh pr checks` — CI status
      - `gh pr view --json mergeable` — merge conflicts
      - `gh pr view --json reviewDecision` — review approval
      - `gh pr view --json isDraft` — draft status
-   - If not ready (failing checks, unresolved conflicts, missing reviews), inform user of blockers and exit
+   - Not ready (failing checks, conflicts, missing reviews) → inform user of blockers & exit
 
-3. **Analyze the changes:**
-   - Get all commits in PR: `gh pr view --json commits`
-   - Get files changed: `gh pr diff --name-only` or `git diff main..HEAD --stat`
-   - Review the actual diff: `gh pr diff`
-   - Identify the scope: bug fix, feature, enhancement, refactor, etc.
+3. **Analyze changes:**
+   - All commits: `gh pr view --json commits`
+   - Files changed: `gh pr diff --name-only` or `git diff main..HEAD --stat`
+   - Actual diff: `gh pr diff`
+   - Identify scope: bug fix, feature, enhancement, refactor, etc.
 
 4. **Update PR description to reflect completed work:**
-   - Compare the current PR body (from step 1) against the actual diff and commit history
-   - The PR description is often outdated — it may reflect the original plan rather than what was actually implemented
-   - Update the PR description to accurately reflect the final state of the work:
+   - Compare current body (from step 1) vs actual diff & commit history
+   - PR description often outdated — reflects original plan, not what was implemented
+   - Update to accurately reflect final state:
      ```bash
      gh pr edit <number> --body "$(cat <<'EOF'
      <updated description>
      EOF
      )"
      ```
-   - Keep the same general structure/format but ensure:
-     - Completed items are accurate (not aspirational)
-     - Removed or abandoned changes are no longer listed
-     - Any additional work done beyond the original scope is included
-   - Skip this step if the description already matches the actual changes
+   - Keep general structure but ensure:
+     - Completed items accurate (not aspirational)
+     - Removed / abandoned changes no longer listed
+     - Additional work beyond original scope included
+   - Skip if description already matches actual changes
 
 5. **Generate release-note-ready commit message:**
-   - Title: Conventional Commits format from PR title with PR number -- `type(area): concise imperative description (#42)`
+   - Title: Conventional Commits from PR title with PR number — `type(area): concise imperative description (#42)`
      - **type**: `fix`, `feat`, `refactor`, `chore`, `docs`, `test`
      - **area**: affected module (`gmail`, `missions`, `cli`, `e2e`, `server`, `contacts`, `calendar`, `schema`, `config`, `llm`)
-     - Derive from the PR title; if the PR already uses this format, reuse it directly
+     - Derive from PR title; reuse directly if already in format
    - Body sections:
      - **Summary**: 2-3 sentence description of what changed
-     - **Changes**: Bulleted list of key changes
-     - **Breaking Changes**: Note any breaking changes (if applicable)
+     - **Changes**: bulleted list of key changes
+     - **Breaking Changes**: if applicable
    - Format for squash merge
 
-6. **Post model insights as PR comment:**
-   - Before merging, add a comment to the PR with any notable insights from the analysis
-   - Use `gh pr comment <number> --body "$(cat <<'EOF'...EOF)"`
-   - Include any of the following that apply:
-     - Observations about code quality or patterns in the diff
-     - Technical debt or risks noticed during review
-     - Suggestions for follow-up work
-     - Edge cases or considerations for the release
-   - Keep the comment concise and actionable — skip this step if there are no meaningful insights
+6. **Post insights as PR comment:**
+   - Before merging → comment with notable insights
+   - `gh pr comment <number> --body "$(cat <<'EOF'...EOF)"`
+   - Include any of:
+     - Code quality / pattern observations in diff
+     - Tech debt or risks noticed
+     - Follow-up suggestions
+     - Edge cases or release considerations
+   - Concise & actionable. Skip if no meaningful insights.
 
-7. **Merge the PR:**
-   - Use squash merge with `--delete-branch` to delete branch automatically:
+7. **Merge:**
+   - Squash + `--delete-branch`:
      ```bash
      gh pr merge <number> --squash --delete-branch --subject "<title>" --body "$(cat <<'EOF'
      <body>
      EOF
      )"
      ```
-   - Alternative merge strategies:
+   - Alternatives:
      - Merge commit: `gh pr merge <number> --merge --delete-branch`
      - Rebase: `gh pr merge <number> --rebase --delete-branch`
-   - For repos with merge queues, use `--auto` to queue when checks pass
-   - Always pass `--delete-branch` explicitly — never rely on the short form `-d` or omit it
+   - Repos w/ merge queues → `--auto` to queue when checks pass
+   - ! Always pass `--delete-branch` explicitly. ⊥ short form `-d`. ⊥ omit.
 
 8. **Clean up branches:**
-   - The `--delete-branch` flag on `gh pr merge` deletes both local and remote branches for the merged PR
+   - `--delete-branch` deletes local & remote branches for merged PR
    - Switch to main: `git checkout main`
    - Pull latest: `git pull origin main`
-   - Prune stale remote refs: `git fetch --prune`
+   - Prune stale refs: `git fetch --prune`
 
 9. **Confirm completion:**
-   - Show the merge commit: `git log -1`
-   - Output the merged PR URL
-   - Display the commit message for release notes
+   - Show merge commit: `git log -1`
+   - Output merged PR URL
+   - Display commit message for release notes
 
 ## Commit Message Format
 
@@ -129,10 +131,10 @@ Users can now log in and receive tokens that expire after 24 hours.
 
 ## Requirements
 
-- Always use squash merge for clean history (unless repo prefers merge commits)
-- Use Conventional Commits format with PR number: `type(area): description (#number)`
-- Commit message must be suitable for release notes
-- Use `--delete-branch` flag to clean up branches automatically
-- Verify all checks pass before merging
-- Never force merge if checks are failing
-- For draft PRs, confirm with user before marking ready
+- ! Squash merge for clean history (unless repo prefers merge commits)
+- Conventional Commits w/ PR number: `type(area): description (#number)`
+- Commit message must be release-note suitable
+- ! `--delete-branch` for branch cleanup
+- ! Verify all checks pass before merging
+- ⊥ force merge if checks failing
+- Draft PRs → confirm w/ user before marking ready

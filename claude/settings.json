@@ -1,11 +1,39 @@
 {
   "includeCoAuthoredBy": false,
   "permissions": {
-    "allow": [
-      "WebSearch"
-    ],
+    "allow": ["WebSearch"],
     "deny": [],
     "ask": []
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/caveman-activate.js\"",
+            "timeout": 5,
+            "statusMessage": "Loading caveman mode..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/caveman-mode-tracker.js\"",
+            "timeout": 5,
+            "statusMessage": "Tracking caveman mode..."
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash \"$HOME/.claude/hooks/caveman-statusline.sh\""
   },
   "enabledPlugins": {
     "claude-md-management@claude-plugins-official": true,
@@ -13,7 +41,8 @@
     "skill-creator@claude-plugins-official": true,
     "ai@pydantic-skills": true,
     "logfire@pydantic-skills": true,
-    "ralph-loop@claude-plugins-official": true
+    "caveman@caveman": true,
+    "ck@cavekit-marketplace": true
   },
   "extraKnownMarketplaces": {
     "pydantic-skills": {
@@ -22,6 +51,19 @@
         "repo": "pydantic/skills"
       },
       "autoUpdate": true
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "juliusbrussee/caveman"
+      },
+      "autoUpdate": true
+    },
+    "cavekit-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "juliusbrussee/cavekit"
+      }
     }
   },
   "effortLevel": "high",

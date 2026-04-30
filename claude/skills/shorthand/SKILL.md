@@ -1,7 +1,7 @@
 ---
 name: shorthand
 description: |
-  Compression rules for drafting terse human-facing docs (READMEs, design
+  Compression rules for terse human-facing docs (READMEs, SKILL.md, design
   notes, internal pages, comments meant to be read). Cuts filler without
   alienating readers — math symbols stay out, arrows stay in. Triggers when
   user says "shorthand", "draft terser", "tighten this doc", "make this
@@ -10,9 +10,8 @@ description: |
 
 # shorthand — terse docs for humans
 
-Style guide for drafting concise human-readable docs.
-Sister to the `legend` skill, which targets SKILL.md authoring.
-Difference: this skill assumes a human reader who has not memorized a math glossary.
+Style guide for concise human-readable docs.
+Assumes a human reader who hasn't memorized a math glossary.
 
 Does NOT apply to: code, error strings, commit messages, PR descriptions, RFCs, anything for external review.
 
@@ -40,13 +39,13 @@ Safe for general readers:
 ≠   not equal
 ```
 
-Avoid in human docs (use words instead):
+Avoid (use words instead):
 
 ```
 ∀ ∃ ∴ ⊥ ∈ ∉ §
 ```
 
-These are precise but slow most readers down. Reserve them for SKILL.md (see `legend`).
+Precise but slow most readers down.
 
 ## PRESERVE VERBATIM
 

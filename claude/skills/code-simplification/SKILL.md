@@ -13,9 +13,7 @@ allowed-tools: Read, Grep, Glob, Edit, Bash(git diff *)
 
 # Code Simplification
 
-> Notation: terse. See [legend](../legend/SKILL.md) for symbols (`!`, `⊥`, `→`, `∀`, `>`).
-
-Refine for clarity, consistency, maintainability. ⊥ change behavior — only how it's expressed. Goal: easier to read, understand, extend.
+Refine for clarity, consistency, maintainability. Don't change behavior — only how it's expressed. Goal: easier to read, understand, extend.
 
 ## Scope
 
@@ -25,7 +23,7 @@ Determine from $ARGUMENTS:
 - **File paths:** those files
 - **"all":** broader scope — confirm intent before touching many files
 
-If no recent modifications & no argument → inform user & exit.
+If no recent modifications and no argument → inform user and exit.
 
 ## What to Simplify
 
@@ -38,7 +36,7 @@ If no recent modifications & no argument → inform user & exit.
 
 **Eliminate Redundancy**
 
-- Remove dead code & unused variables
+- Remove dead code and unused variables
 - Consolidate duplicates only at 3+ repetitions — two similar lines are fine
 - Drop intermediate variables that don't add clarity
 - Strip comments describing obvious code
@@ -55,22 +53,22 @@ If no recent modifications & no argument → inform user & exit.
 - Default Python:
   - Sorted imports (stdlib, third-party, local)
   - Type hints on signatures
-  - Explicit > implicit
-  - ⊥ nested ternaries — use if/else or match/case
-  - `pathlib.Path` > `os.path`
+  - Explicit over implicit
+  - No nested ternaries — use if/else or match/case
+  - `pathlib.Path` over `os.path`
 
 ## What NOT to Do
 
-- ⊥ change behavior or outputs
-- ⊥ premature abstractions — three similar lines > forced helper
-- ⊥ over-compress — clarity > brevity
-- ⊥ add features, error handling, validation beyond what exists
-- ⊥ touch code outside scope
-- ⊥ add docstrings or type hints to code you didn't otherwise change
+- Don't change behavior or outputs
+- No premature abstractions — three similar lines beat a forced helper
+- Don't over-compress — clarity beats brevity
+- Don't add features, error handling, validation beyond what exists
+- Don't touch code outside scope
+- Don't add docstrings or type hints to code you didn't otherwise change
 
 ## Process
 
 1. Identify in-scope files.
 2. Read each, identify simplifications.
 3. Apply via Edit. Small, focused edits.
-4. After all edits → brief summary: what changed & why, grouped by file.
+4. After all edits → brief summary: what changed and why, grouped by file.

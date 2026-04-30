@@ -6,21 +6,19 @@ model: sonnet
 allowed-tools: Bash(git *), Bash(git status)
 ---
 
-> Notation: terse. See [legend](../legend/SKILL.md) for symbols (`!`, `⊥`, `→`, `∀`, `>`).
-
 Commit staged changes with well-crafted message.
 
 ## Process
 
 1. **Check staged changes:**
    - `git diff --cached --stat` to see what's staged
-   - Nothing staged → inform user & exit
+   - Nothing staged → inform user and exit
    - $ARGUMENTS provided → use as hint
 
 2. **Analyze changes:**
    - `git diff --staged` to review
    - Identify added / modified / removed
-   - Understand purpose & scope
+   - Understand purpose and scope
 
 3. **Check repo style:**
    - `git log --oneline --max-count=10` for recent patterns
@@ -69,7 +67,7 @@ refactor(server): replace session-based auth with JWT tokens
 
 - Conventional Commits: `type(area): imperative description`
 - Title completes: "This commit will..."
-- ! Only commit what's staged (don't stage more)
-- ⊥ push unless explicitly requested
+- Only commit what's staged (don't stage more)
+- Don't push unless explicitly requested
 - Match repo style when possible
 - Reference issue numbers if relevant (e.g., "fix login bug (#42)")

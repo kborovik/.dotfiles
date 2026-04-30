@@ -13,9 +13,7 @@ allowed-tools: Read, Grep, Glob, Bash(git diff *), Bash(git log *), Bash(git sho
 
 # Code Review
 
-> Notation: terse. See [legend](../legend/SKILL.md) for symbols (`!`, `⊥`, `→`, `∀`, `>`).
-
-Review with precision. Report issues that matter — bugs that break things, security holes, logic errors, convention violations. ⊥ noise.
+Review with precision. Report issues that matter — bugs that break things, security holes, logic errors, convention violations. No noise.
 
 ## Review Scope
 
@@ -27,11 +25,11 @@ Determine from $ARGUMENTS:
 - **File paths:** specific files
 - **"staged":** staged changes (`git diff --cached`)
 
-If scope empty (no changes) → inform user & exit.
+If scope empty (no changes) → inform user and exit.
 
 ## What to Check
 
-**Bugs & Logic Errors**
+**Bugs and Logic Errors**
 
 - Null/undefined handling, off-by-one, race conditions
 - Incorrect boolean logic, missing edge cases
@@ -48,10 +46,10 @@ If scope empty (no changes) → inform user & exit.
 **Project Conventions**
 
 - Check CLAUDE.md if exists — violations of explicit rules = high-confidence issues
-- Import ordering & module structure
+- Import ordering and module structure
 - Naming (variables, functions, classes)
 - Project error-handling patterns
-- Testing patterns & coverage expectations
+- Testing patterns and coverage expectations
 
 **Python-Specific**
 
@@ -68,26 +66,26 @@ Rate 0-100:
 | Score | Meaning                                                                 |
 | ----- | ----------------------------------------------------------------------- |
 | 0     | False positive or pre-existing                                          |
-| 25    | Maybe real, maybe false. Stylistic w/o explicit project guideline.      |
+| 25    | Maybe real, maybe false. Stylistic without explicit project guideline.  |
 | 50    | Real but minor — nitpick or unlikely to cause problems                  |
 | 75    | Verified real, affects functionality or called out in project guideline |
 | 100   | Confirmed critical, will definitely cause failure                       |
 
-! Only report ≥80. Quality > quantity.
+Only report ≥80. Quality over quantity.
 
 ## Output Format
 
 State scope first.
 
-∀ issue:
+Each issue:
 
 - Confidence score
 - Severity: **Critical** | **Important**
-- File path & line number
+- File path and line number
 - Clear problem description
 - Why it matters (project guideline ref or bug explanation)
 - Concrete fix
 
 Group by severity (Critical first).
 
-If no high-confidence issues → confirm code meets standards w/ brief summary of what was checked.
+If no high-confidence issues → confirm code meets standards with brief summary of what was checked.

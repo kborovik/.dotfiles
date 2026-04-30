@@ -13,19 +13,17 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Bash(git *), Bash(make *)
 
 # Feature Development
 
-> Notation: terse. See [legend](../legend/SKILL.md) for symbols (`!`, `⊥`, `→`, `∀`, `>`).
-
 Understand codebase → surface ambiguities → design architecture → implement. User approval at checkpoints.
 
 ## Core Principles
 
 - **Ask before assuming.** Surface ambiguities before architecture.
-- **Read before writing.** Existing patterns & conventions first.
+- **Read before writing.** Existing patterns and conventions first.
 - **Read agent-identified files yourself.** Explore agents return key file lists; you read them to build context.
-- **Simple > clever.** Readable & maintainable wins.
+- **Simple over clever.** Readable and maintainable wins.
 - **Track via TodoWrite.**
 
-Default lang: Python (type hints, sorted imports, docstrings on public APIs). Adapt to project — check CLAUDE.md & existing code first.
+Default lang: Python (type hints, sorted imports, docstrings on public APIs). Adapt to project — check CLAUDE.md and existing code first.
 
 ---
 
@@ -40,13 +38,13 @@ Initial request: $ARGUMENTS
    - Problem being solved?
    - What should feature do?
    - Constraints / requirements?
-3. Summarize understanding & confirm.
+3. Summarize understanding and confirm.
 
 ---
 
 ## Phase 2: Codebase Exploration
 
-Goal: understand relevant code & patterns, high & low level.
+Goal: understand relevant code and patterns, high and low level.
 
 1. Launch 3 `Explore` agents in parallel. Each targets a different aspect, returns 5-10 key files. Example prompts:
    - "Find features similar to [feature] and trace through their implementation comprehensively"
@@ -55,22 +53,22 @@ Goal: understand relevant code & patterns, high & low level.
    - "Identify testing approaches, extension points, or UI patterns relevant to [feature]"
 
 2. Read all key files agents identified.
-3. Present summary of findings & patterns.
+3. Present summary of findings and patterns.
 
 ---
 
 ## Phase 3: Clarifying Questions
 
-Goal: resolve every ambiguity before designing. ! Do not skip.
+Goal: resolve every ambiguity before designing. Do not skip.
 
-1. Review findings & original request.
+1. Review findings and original request.
 2. Identify gaps:
-   - Edge cases & error handling
+   - Edge cases and error handling
    - Integration points
    - Scope boundaries (in / out)
-   - Design preferences & backward compat
+   - Design preferences and backward compat
    - Performance needs
-3. ∀ question → recommended answer + rationale. Educates user on trade-offs → informed decisions, not blind guesses.
+3. Each question → recommended answer + rationale. Educates user on trade-offs → informed decisions, not blind guesses.
 4. Present all questions in clear list.
 5. Wait for answers before architecture.
 
@@ -101,12 +99,12 @@ Goal: design with clear trade-offs.
 
 Goal: build feature.
 
-! Do not start without explicit approval of chosen approach.
+Do not start without explicit approval of chosen approach.
 
 1. Read all relevant files from prior phases.
 2. Implement per chosen architecture.
 3. Follow codebase conventions strictly (check CLAUDE.md if exists).
-4. Clarity > brevity.
+4. Clarity over brevity.
 5. Update todos as you progress.
 
 ---

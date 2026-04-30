@@ -6,8 +6,6 @@ model: sonnet
 allowed-tools: Bash(git *), Bash(gh *)
 ---
 
-> Notation: terse. See [legend](../legend/SKILL.md) for symbols (`!`, `⊥`, `→`, `∀`, `>`).
-
 Merge current branch's PR into main with detailed, release-note-ready commit message.
 
 ## gh pr merge Flags Reference
@@ -31,7 +29,7 @@ Merge current branch's PR into main with detailed, release-note-ready commit mes
 1. **Identify PR:**
    - $ARGUMENTS provided → use as PR number
    - Else current branch's PR: `gh pr view --json number,title,body,url`
-   - No PR → inform user & exit
+   - No PR → inform user and exit
 
 2. **Verify ready to merge:**
    - Check remote status:
@@ -39,7 +37,7 @@ Merge current branch's PR into main with detailed, release-note-ready commit mes
      - `gh pr view --json mergeable` — merge conflicts
      - `gh pr view --json reviewDecision` — review approval
      - `gh pr view --json isDraft` — draft status
-   - Not ready (failing checks, conflicts, missing reviews) → inform user of blockers & exit
+   - Not ready (failing checks, conflicts, missing reviews) → inform user of blockers and exit
 
 3. **Analyze changes:**
    - All commits: `gh pr view --json commits`
@@ -48,7 +46,7 @@ Merge current branch's PR into main with detailed, release-note-ready commit mes
    - Identify scope: bug fix, feature, enhancement, refactor, etc.
 
 4. **Update PR description to reflect completed work:**
-   - Compare current body (from step 1) vs actual diff & commit history
+   - Compare current body (from step 1) vs actual diff and commit history
    - PR description often outdated — reflects original plan, not what was implemented
    - Update to accurately reflect final state:
      ```bash
@@ -82,7 +80,7 @@ Merge current branch's PR into main with detailed, release-note-ready commit mes
      - Tech debt or risks noticed
      - Follow-up suggestions
      - Edge cases or release considerations
-   - Concise & actionable. Skip if no meaningful insights.
+   - Concise and actionable. Skip if no meaningful insights.
 
 7. **Merge:**
    - Squash + `--delete-branch`:
@@ -95,11 +93,11 @@ Merge current branch's PR into main with detailed, release-note-ready commit mes
    - Alternatives:
      - Merge commit: `gh pr merge <number> --merge --delete-branch`
      - Rebase: `gh pr merge <number> --rebase --delete-branch`
-   - Repos w/ merge queues → `--auto` to queue when checks pass
-   - ! Always pass `--delete-branch` explicitly. ⊥ short form `-d`. ⊥ omit.
+   - Repos with merge queues → `--auto` to queue when checks pass
+   - Always pass `--delete-branch` explicitly. Never short form `-d`. Never omit.
 
 8. **Clean up branches:**
-   - `--delete-branch` deletes local & remote branches for merged PR
+   - `--delete-branch` deletes local and remote branches for merged PR
    - Switch to main: `git checkout main`
    - Pull latest: `git pull origin main`
    - Prune stale refs: `git fetch --prune`
@@ -131,10 +129,10 @@ Users can now log in and receive tokens that expire after 24 hours.
 
 ## Requirements
 
-- ! Squash merge for clean history (unless repo prefers merge commits)
-- Conventional Commits w/ PR number: `type(area): description (#number)`
+- Squash merge for clean history (unless repo prefers merge commits)
+- Conventional Commits with PR number: `type(area): description (#number)`
 - Commit message must be release-note suitable
-- ! `--delete-branch` for branch cleanup
-- ! Verify all checks pass before merging
-- ⊥ force merge if checks failing
-- Draft PRs → confirm w/ user before marking ready
+- `--delete-branch` for branch cleanup
+- Verify all checks pass before merging
+- Don't force merge if checks failing
+- Draft PRs → confirm with user before marking ready

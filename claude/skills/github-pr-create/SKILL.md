@@ -6,8 +6,6 @@ model: opus
 allowed-tools: Bash(git *), Bash(gh *), Bash(make *), Read, Grep, Glob, Edit, Write
 ---
 
-> Notation: terse. See [legend](../legend/SKILL.md) for symbols (`!`, `⊥`, `→`, `∀`, `>`).
-
 Create PR from issue number or free-form objective.
 
 ## gh pr create Flags Reference
@@ -35,7 +33,7 @@ Create PR from issue number or free-form objective.
 
 ## Process
 
-### Phase 1: Parse input & create PR
+### Phase 1: Parse input and create PR
 
 1. **Determine input type from $ARGUMENTS:**
    - No argument → AskUserQuestion for issue number
@@ -53,7 +51,7 @@ Create PR from issue number or free-form objective.
 - Body: include `Resolves #<number>` to auto-close issue
 - Branch name: `<issue-number>-<slugified-title>` (e.g., `42-add-rate-limiting`)
 - Slugify: lowercase, spaces → hyphens, strip special chars, max 50 chars
-- Create branch & PR:
+- Create branch and PR:
   - Start from main: `git checkout main && git pull origin main`
   - Branch: `git switch --create <issue-number>-<slugified-title>`
   - Empty commit: `git commit --allow-empty --message "wip: <issue-title> (#<issue-number>)"`
@@ -66,11 +64,11 @@ Create PR from issue number or free-form objective.
 - Generate Conventional Commits title from objective — `type(area): concise imperative description`
   - **type**: `fix`, `feat`, `refactor`, `chore`, `docs`, `test`
   - **area**: affected module (`gmail`, `missions`, `cli`, `e2e`, `server`, `contacts`, `calendar`, `schema`, `config`, `llm`)
-- ⊥ investigate codebase yet — derive title directly from objective
+- Don't investigate codebase yet — derive title directly from objective
 - Slugify: lowercase, spaces → hyphens, strip special chars, max 50 chars
-- Create branch & PR:
+- Create branch and PR:
   - Start from main: `git checkout main && git pull origin main`
-  - Branch w/ temp name: `git switch --create <slugified-title>`
+  - Branch with temp name: `git switch --create <slugified-title>`
   - Empty commit: `git commit --allow-empty --message "wip: <PR title>"`
   - Push: `git push --set-upstream origin <slugified-title>`
   - Regular PR: `gh pr create --title "..." --body "$(cat <<'EOF'...EOF)"`
@@ -79,7 +77,7 @@ Create PR from issue number or free-form objective.
 ### Phase 2: Implement (after PR exists)
 
 3. **Use `/code-development` skill:**
-   - Invoke w/ PR objective / issue description as argument
+   - Invoke with PR objective / issue description as argument
    - Skill handles exploration, clarifying questions, architecture, implementation
    - Let it drive: explore → ask → plan → build
 
@@ -87,22 +85,22 @@ Create PR from issue number or free-form objective.
 
 4. **Use `/code-simplification` on modified files:**
    - Cleans up implementation
-   - Preserves functionality, improves clarity & consistency
+   - Preserves functionality, improves clarity and consistency
 
 ### Phase 4: Review
 
 5. **Use `/code-review` on branch diff:**
-   - Invoke w/ branch name → review all changes vs main
+   - Invoke with branch name → review all changes vs main
    - Fix Critical issues before proceeding
-   - Discuss Important issues w/ user
+   - Discuss Important issues with user
 
 ### Phase 5: Verify
 
 6. **Run verification gate:**
    - `make check` (or project-specific) after major changes
    - No verification target → inform user, suggest creating one
-   - ! Must pass before PR considered complete
-   - Tests fail → diagnose & fix until pass
+   - Must pass before PR considered complete
+   - Tests fail → diagnose and fix until pass
 
 ### Phase 6: Finalize
 
@@ -112,16 +110,16 @@ Create PR from issue number or free-form objective.
    - Include any of:
      - Architectural observations / design decisions
      - Tech debt discovered or trade-offs chosen
-     - Edge cases identified & how handled
-     - Alternatives considered & why rejected
+     - Edge cases identified and how handled
+     - Alternatives considered and why rejected
      - Risks or future-attention areas
-   - Concise & actionable. Skip if no meaningful insights.
+   - Concise and actionable. Skip if no meaningful insights.
 
 ## Requirements
 
-- ! Always regular PR (⊥ `--draft`)
+- Always regular PR (no `--draft`)
 - Branch names concise but descriptive
-- From issue → ! "Resolves #<number>" in body
+- From issue → must include "Resolves #<number>" in body
 - From objective → body must contain enough context for reviewers
 - code-development skill drives its own checkpoints — let it
-- Success = verification gate passes & code-review finds no Critical issues
+- Success = verification gate passes and code-review finds no Critical issues

@@ -6,8 +6,6 @@ model: opus
 allowed-tools: Bash(gh *), Read, Grep, Glob
 ---
 
-> Notation: terse. See [legend](../legend/SKILL.md) for symbols (`!`, `⊥`, `→`, `∀`, `>`).
-
 Create GitHub issue. Investigate codebase first for context.
 
 ## Process
@@ -23,7 +21,7 @@ Create GitHub issue. Investigate codebase first for context.
 
 3. **Gather details:**
    - Type: bug, feature, enhancement, refactor
-   - Affected files & code paths
+   - Affected files and code paths
    - Bugs → look for error patterns, failing conditions
    - Features → identify where changes needed
 
@@ -43,13 +41,13 @@ Create GitHub issue. Investigate codebase first for context.
        - `chore(cli): Remove deprecated debug_modules setting`
    - Body sections:
      - **Summary**: 2-3 sentence description
-     - **Context**: Relevant code paths & files from investigation
+     - **Context**: Relevant code paths and files from investigation
      - **Proposed Solution** (if applicable): based on codebase analysis
      - **Acceptance Criteria**: clear, testable
      - **Affected Files**: list of files that may need changes
 
 6. **Determine labels:**
-   - `gh label list` → see existing labels. ⊥ invent new ones
+   - `gh label list` → see existing labels. Don't invent new ones
    - Pick every label that genuinely applies. At minimum: one type label (e.g. `bug`, `enhancement`, `refactor`, `documentation`)
    - Apply area / scope labels when defined (e.g. `gmail`, `cli`, `schema`)
    - No matching type label → ask user before `gh label create`
@@ -57,7 +55,7 @@ Create GitHub issue. Investigate codebase first for context.
 7. **Create issue:**
    - `gh issue create --title "..." --label "label1" --label "label2" --body "$(cat <<'EOF'...EOF)"`
    - Each label as separate `--label` flag (or comma-separated in single value)
-   - Output URL & number
+   - Output URL and number
 
 8. **Post insights as comment:**
    - After creating → add comment with notable insights
@@ -67,12 +65,12 @@ Create GitHub issue. Investigate codebase first for context.
      - Related code patterns / dependencies not obvious
      - Risks or complexity affecting implementation
      - Alternative approaches worth noting
-   - Concise & actionable. Skip if no meaningful insights.
+   - Concise and actionable. Skip if no meaningful insights.
 
 ## Requirements
 
 - Investigate before asking — gather context first
 - Keep investigation focused on description
-- ⊥ overly long issues — be concise
+- Don't write overly long issues — be concise
 - Markdown formatting in body
 - Reference specific files / line numbers when relevant

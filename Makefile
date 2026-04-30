@@ -168,7 +168,7 @@ claude_dir := $(HOME)/.claude
 node_bin := /opt/homebrew/bin/node
 rg_bin := /opt/homebrew/bin/rg
 
-claude_skill_names := github-commit-staged github-issue-create github-pr-create github-pr-merge code-development code-review code-simplification legend shorthand
+claude_skill_names := github-commit-staged github-issue-create github-pr-create github-pr-merge code-development code-review code-simplification shorthand
 claude_skills_dir := $(claude_dir)/skills
 
 $(node_bin):

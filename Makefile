@@ -168,9 +168,6 @@ claude_dir := $(HOME)/.claude
 node_bin := /opt/homebrew/bin/node
 rg_bin := /opt/homebrew/bin/rg
 
-claude_skill_names := github-commit-staged github-issue-create github-pr-create github-pr-merge code-development code-review code-simplification shorthand
-claude_skills_dir := $(claude_dir)/skills
-
 $(node_bin):
 	$(call header,node - Install)
 	brew install node
@@ -185,9 +182,8 @@ $(claude_bin): $(node_bin) $(rg_bin)
 
 claude: $(claude_bin) ## Install Claude Code
 	$(call header,Claude Code - Configure)
-	mkdir -p $(claude_dir) $(claude_skills_dir)
+	mkdir -p $(claude_dir)
 	/bin/ln -fs $(CURDIR)/claude/settings.json $(claude_dir)/settings.json
-	$(foreach s,$(claude_skill_names),rm -rf $(claude_skills_dir)/$(s) && /bin/ln -fs $(CURDIR)/claude/skills/$(s) $(claude_skills_dir)/$(s);)
 
 ###############################################################################
 # PostgreSQL

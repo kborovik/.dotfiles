@@ -1,7 +1,9 @@
 {
   "includeCoAuthoredBy": false,
   "permissions": {
-    "allow": ["WebSearch"],
+    "allow": [
+      "WebSearch"
+    ],
     "deny": [],
     "ask": []
   },
@@ -12,7 +14,8 @@
     "skill-creator@claude-plugins-official": true,
     "ai@pydantic-skills": true,
     "logfire@pydantic-skills": true,
-    "ck@cavekit-marketplace": true
+    "sdd@pilot-skills": true,
+    "gh@pilot-skills": true
   },
   "extraKnownMarketplaces": {
     "pydantic-skills": {
@@ -22,14 +25,17 @@
       },
       "autoUpdate": true
     },
-    "cavekit-marketplace": {
+    "pilot-skills": {
       "source": {
         "source": "github",
-        "repo": "juliusbrussee/cavekit"
-      }
+        "repo": "kborovik/pilot-skills"
+      },
+      "autoUpdate": true
     }
   },
   "effortLevel": "high",
   "autoUpdatesChannel": "stable",
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark-ansi",
+  "editorMode": "vim"
 }

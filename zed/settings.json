@@ -122,6 +122,7 @@
     },
   },
   "file_types": {
+    "Plain Text": ["SPEC.md"],
     "Ansible": [
       "**.ansible.yml",
       "**.ansible.yaml",

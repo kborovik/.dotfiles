@@ -9,13 +9,13 @@
   },
   "hooks": {},
   "enabledPlugins": {
-    "claude-md-management@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true,
     "ai@pydantic-skills": true,
     "logfire@pydantic-skills": true,
     "sdd@pilot-skills": true,
-    "gh@pilot-skills": true
+    "pilot-core@pilot-skills": true,
+    "gh@pilot-skills": true,
+    "core@pilot-skills": true
   },
   "extraKnownMarketplaces": {
     "pydantic-skills": {

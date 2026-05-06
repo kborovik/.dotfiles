@@ -2,8 +2,7 @@
   "proxy": "",
   "cli_default_open_behavior": "existing_window",
   "diff_view_style": "unified",
-  "title_bar": {
-    },
+  "title_bar": {},
   "debugger": {
     "button": false,
   },
@@ -87,10 +86,10 @@
   },
   "git": {
     "branch_picker": {
-      "show_author_name": false
+      "show_author_name": false,
     },
     "blame": {
-      "show_avatar": false
+      "show_avatar": false,
     },
     "inline_blame": {
       "enabled": false,
@@ -122,7 +121,6 @@
     },
   },
   "file_types": {
-    "Plain Text": ["SPEC.md"],
     "Ansible": [
       "**.ansible.yml",
       "**.ansible.yaml",

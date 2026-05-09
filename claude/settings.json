@@ -5,7 +5,8 @@
       "WebSearch"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "defaultMode": "auto"
   },
   "hooks": {},
   "enabledPlugins": {
@@ -13,7 +14,6 @@
     "ai@pydantic-skills": true,
     "logfire@pydantic-skills": true,
     "sdd@pilot-skills": true,
-    "pilot-core@pilot-skills": true,
     "gh@pilot-skills": true,
     "core@pilot-skills": true
   },
@@ -37,5 +37,6 @@
   "autoUpdatesChannel": "stable",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-ansi",
-  "editorMode": "vim"
+  "editorMode": "vim",
+  "skipAutoPermissionPrompt": true
 }

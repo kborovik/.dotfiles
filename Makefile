@@ -141,6 +141,9 @@ base: tools $(fish_bin) $(gpg_bin) $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin
 	/bin/ln -fs $(CURDIR)/gnupg/gpg.conf $(HOME)/.gnupg/gpg.conf
 	rm -rf $(HOME)/.config/bat && /bin/ln -fs $(CURDIR)/bat $(HOME)/.config/bat
 	bat cache --build >/dev/null
+	mkdir -p $(HOME)/Library/Preferences/glow
+	/bin/ln -fs $(CURDIR)/glow/glow.yml $(HOME)/Library/Preferences/glow/glow.yml
+	/bin/ln -fs $(CURDIR)/glamour/glamour-custom.json $(HOME)/Library/Preferences/glow/glamour-custom.json
 
 ###############################################################################
 # Zed Editor

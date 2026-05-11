@@ -27,10 +27,12 @@
       "args": [],
       "projects": [
         {
-          "paths": ["/home/ubuntu/lab5-missions"],
-        },
-      ],
-    },
+          "paths": [
+            "/home/ubuntu/mailpilot"
+          ]
+        }
+      ]
+    }
   ],
   "agent": {
     "dock": "left",

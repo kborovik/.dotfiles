@@ -14,6 +14,16 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   unstaged=0
   staged=0
   untracked=0
+  ahead=0
+  behind=0
+
+  if upstream=$(git -C "$cwd" rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null); then
+    counts=$(git -C "$cwd" rev-list --count --left-right "${upstream}...HEAD" 2>/dev/null)
+    if [ -n "$counts" ]; then
+      behind=${counts%%	*}
+      ahead=${counts##*	}
+    fi
+  fi
 
   while IFS= read -r line; do
     [ -z "$line" ] && continue
@@ -35,10 +45,11 @@ EOF
   GREEN='\033[32m'
   YELLOW='\033[33m'
   RED='\033[31m'
+  BLUE='\033[34m'
   RESET='\033[0m'
 
-  printf "${CYAN}%s${RESET}  ${MAGENTA}%s${RESET}  ${GREEN}+%d${RESET} ${YELLOW}~%d${RESET} ${RED}?%d${RESET}" \
-    "$dir" "$branch" "$staged" "$unstaged" "$untracked"
+  printf "${CYAN}%s${RESET}  ${MAGENTA}%s${RESET}  ${GREEN}+%d${RESET} ${YELLOW}~%d${RESET} ${RED}?%d${RESET}  ${BLUE}↑%d ↓%d${RESET}" \
+    "$dir" "$branch" "$staged" "$unstaged" "$untracked" "$ahead" "$behind"
 else
   CYAN='\033[96m'
   RESET='\033[0m'

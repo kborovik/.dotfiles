@@ -11,8 +11,7 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   branch=$(git -C "$cwd" rev-parse --abbrev-ref HEAD 2>/dev/null)
   porcelain=$(git -C "$cwd" -c core.fsmonitor= status --porcelain 2>/dev/null)
 
-  unstaged=0
-  staged=0
+  changed=0
   untracked=0
   ahead=0
   behind=0
@@ -33,25 +32,32 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
     if [ "$x" = "?" ] && [ "$y" = "?" ]; then
       untracked=$((untracked + 1))
     else
-      [ "$x" != " " ] && [ "$x" != "?" ] && staged=$((staged + 1))
-      [ "$y" != " " ] && [ "$y" != "?" ] && unstaged=$((unstaged + 1))
+      changed=$((changed + 1))
     fi
   done <<EOF
 $porcelain
 EOF
 
-  CYAN='\033[96m'
-  MAGENTA='\033[95m'
-  GREEN='\033[32m'
-  YELLOW='\033[33m'
-  RED='\033[31m'
-  BLUE='\033[34m'
+  # Catppuccin Macchiato — match fish __fish_git_prompt_color_* settings
+  CWD='\033[38;2;238;212;159m'      # yellow  eed49f
+  BRANCH='\033[38;2;139;213;202m'   # teal    8bd5ca
+  UPSTREAM='\033[38;2;138;173;244m' # blue    8aadf4
+  DIRTY='\033[38;2;237;135;150m'    # red     ed8796
+  UNTRACKED='\033[38;2;198;160;246m' # mauve  c6a0f6
+  CLEAN='\033[38;2;166;218;149m'    # green   a6da95
   RESET='\033[0m'
 
-  printf "${CYAN}%s${RESET}  ${MAGENTA}%s${RESET}  ${GREEN}+%d${RESET} ${YELLOW}~%d${RESET} ${RED}?%d${RESET}  ${BLUE}↑%d ↓%d${RESET}" \
-    "$dir" "$branch" "$staged" "$unstaged" "$untracked" "$ahead" "$behind"
+  out="${CWD}${dir}${RESET}  ${BRANCH}${branch}${RESET}"
+  [ "$ahead" -gt 0 ] && out="${out}  ${UPSTREAM}↑${ahead}${RESET}"
+  [ "$behind" -gt 0 ] && out="${out}  ${UPSTREAM}↓${behind}${RESET}"
+  [ "$changed" -gt 0 ] && out="${out}  ${DIRTY}!${changed}${RESET}"
+  [ "$untracked" -gt 0 ] && out="${out}  ${UNTRACKED}^${untracked}${RESET}"
+  if [ "$changed" -eq 0 ] && [ "$untracked" -eq 0 ]; then
+    out="${out}  ${CLEAN}✓${RESET}"
+  fi
+  printf "%b" "$out"
 else
-  CYAN='\033[96m'
+  CWD='\033[38;2;238;212;159m'
   RESET='\033[0m'
-  printf "${CYAN}%s${RESET}" "$dir"
+  printf "${CWD}%s${RESET}" "$dir"
 fi

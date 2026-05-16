@@ -1,14 +1,16 @@
 {
   "includeCoAuthoredBy": false,
   "permissions": {
-    "allow": [
-      "WebSearch"
-    ],
+    "allow": ["WebSearch"],
     "deny": [],
     "ask": [],
     "defaultMode": "auto"
   },
   "hooks": {},
+  "statusLine": {
+    "type": "command",
+    "command": "sh ~/.claude/statusline-command.sh"
+  },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
     "ai@pydantic-skills": true,
@@ -33,14 +35,9 @@
       "autoUpdate": true
     }
   },
-  "effortLevel": "xhigh",
   "autoUpdatesChannel": "stable",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-ansi",
   "editorMode": "vim",
-  "skipAutoPermissionPrompt": true,
-  "statusLine": {
-    "type": "command",
-    "command": "sh /Users/kb/.claude/statusline-command.sh"
-  }
+  "skipAutoPermissionPrompt": true
 }

@@ -2,11 +2,8 @@
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": ["WebSearch"],
-    "deny": [],
-    "ask": [],
     "defaultMode": "auto"
   },
-  "hooks": {},
   "statusLine": {
     "type": "command",
     "command": "sh ~/.claude/statusline-command.sh"

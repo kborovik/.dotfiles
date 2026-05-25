@@ -2,7 +2,7 @@
 .EXPORT_ALL_VARIABLES:
 .PHONY: default help init base tools zed claude pgsql ssh
 .PHONY: fish gpg git vim gitui glamour
-.PHONY: git-credentials-load git-credentials-save commit prompt ssh-save
+.PHONY: git-credentials-load git-credentials-save commit prompt ssh-save ssh-encrypt
 
 MAKEFLAGS += --no-builtin-rules --no-builtin-variables
 
@@ -230,6 +230,19 @@ ssh: $(pass_bin) | $(ssh_dir) ## Configure SSH keys
 	rm -f $(ssh_dir)/config && gpg -d $(CURDIR)/ssh/config.gpg > $(ssh_dir)/config && chmod 600 $(ssh_dir)/config
 	test -f $(ssh_id_ed25519) || (pass ssh/id_ed25519 > $(ssh_id_ed25519) && chmod 600 $(ssh_id_ed25519) && ssh-keygen -y -f $(ssh_id_ed25519) > $(ssh_id_ed25519).pub && chmod 644 $(ssh_id_ed25519).pub)
 	test -f $(ssh_id_rsa) || (pass ssh/id_rsa > $(ssh_id_rsa) && chmod 600 $(ssh_id_rsa) && ssh-keygen -y -f $(ssh_id_rsa) > $(ssh_id_rsa).pub && chmod 644 $(ssh_id_rsa).pub)
+	$(MAKE) ssh-encrypt
+
+ssh-encrypt: $(pass_bin) | $(ssh_dir) ## Add passphrase (from pass ssh/passphrase) to any unencrypted SSH private keys
+	$(call header,SSH - Encrypt keys)
+	pp=$$(pass ssh/passphrase); \
+	for k in $$(grep -l "^-----BEGIN.*PRIVATE KEY-----" $(ssh_dir)/* 2>/dev/null); do \
+		if ssh-keygen -y -P "" -f $$k >/dev/null 2>&1; then \
+			echo "encrypting $$k"; \
+			ssh-keygen -o -a 100 -p -P "" -N "$$pp" -f $$k >/dev/null; \
+		else \
+			echo "already encrypted: $$k"; \
+		fi; \
+	done
 
 ssh-save: ## Re-encrypt ~/.ssh/config to repo
 	$(call header,SSH - Encrypt config)

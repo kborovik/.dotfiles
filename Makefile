@@ -2,7 +2,7 @@
 .EXPORT_ALL_VARIABLES:
 .PHONY: default help init base tools zed claude pgsql ssh
 .PHONY: fish gpg git vim gitui glamour
-.PHONY: git-credentials-load git-credentials-save commit prompt ssh-save ssh-encrypt
+.PHONY: git-credentials-load git-credentials-save commit prompt ssh-save ssh-encrypt gpg-encrypt
 
 MAKEFLAGS += --no-builtin-rules --no-builtin-variables
 
@@ -56,6 +56,7 @@ pass_bin := /opt/homebrew/bin/pass
 gh_bin := /opt/homebrew/bin/gh
 fish_bin := /opt/homebrew/bin/fish
 gpg_bin := /opt/homebrew/bin/gpg
+pinentry_mac_bin := /opt/homebrew/bin/pinentry-mac
 git_bin := /opt/homebrew/bin/git
 riff_bin := /opt/homebrew/bin/riff
 vim_bin := /opt/homebrew/bin/vim
@@ -83,6 +84,10 @@ $(jq_bin):
 $(gpg_bin):
 	$(call header,gnupg - Install)
 	brew install gnupg
+
+$(pinentry_mac_bin):
+	$(call header,pinentry-mac - Install)
+	brew install pinentry-mac
 
 $(pass_bin): | $(gpg_bin)
 	$(call header,pass - Install)
@@ -126,7 +131,7 @@ $(tree_bin):
 
 tools: $(coreutils_bin) $(sed_bin) $(gmake_bin) $(jq_bin) $(pass_bin) $(gh_bin) $(tree_bin)
 
-base: tools $(fish_bin) $(gpg_bin) $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin) $(glow_bin) $(bat_bin) ## Install base tools and configs
+base: tools $(fish_bin) gpg $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin) $(glow_bin) $(bat_bin) ## Install base tools and configs
 	$(call header,Base - Configure)
 	/bin/ln -fs $(CURDIR)/zshenv $(HOME)/.zshenv
 	/bin/ln -fs $(CURDIR)/digrc $(HOME)/.digrc
@@ -137,8 +142,6 @@ base: tools $(fish_bin) $(gpg_bin) $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin
 	mkdir -p $(HOME)/.config/gitui
 	/bin/ln -fs $(CURDIR)/gitui/theme.ron $(HOME)/.config/gitui/theme.ron
 	/bin/ln -fs $(CURDIR)/gitui/key_bindings.ron $(HOME)/.config/gitui/key_bindings.ron
-	mkdir -p $(HOME)/.gnupg && chmod 700 $(HOME)/.gnupg
-	/bin/ln -fs $(CURDIR)/gnupg/gpg.conf $(HOME)/.gnupg/gpg.conf
 	rm -rf $(HOME)/.config/bat && /bin/ln -fs $(CURDIR)/bat $(HOME)/.config/bat
 	bat cache --build >/dev/null
 	mkdir -p $(HOME)/Library/Preferences/glow
@@ -213,6 +216,45 @@ pgsql: $(pg_bin) $(pgcli_bin) ## Install PostgreSQL 18
 	/bin/ln -fs $(CURDIR)/pgsql/pgcli.conf $(HOME)/.config/pgcli/config
 	grep -q "include_dir = 'conf.d'" $(pg_data)/postgresql.conf || echo "include_dir = 'conf.d'" >> $(pg_data)/postgresql.conf
 	brew services restart postgresql@18
+
+###############################################################################
+# GnuPG
+###############################################################################
+
+gpg_dir := $(HOME)/.gnupg
+gpg_pass_entry := gpg/github@lab5.ca
+
+gpg: $(gpg_bin) $(pinentry_mac_bin) ## Install GnuPG + pinentry-mac and link configs
+	$(call header,GnuPG - Configure)
+	mkdir -p $(gpg_dir) && chmod 700 $(gpg_dir)
+	/bin/ln -fs $(CURDIR)/gnupg/gpg.conf $(gpg_dir)/gpg.conf
+	/bin/ln -fs $(CURDIR)/gnupg/gpg-agent.conf $(gpg_dir)/gpg-agent.conf
+	gpgconf --kill gpg-agent
+	$(MAKE) gpg-encrypt
+
+gpg-encrypt: $(pass_bin) $(gpg_bin) ## Check all on-disk GPG private keys are passphrase-encrypted
+	$(call header,GPG - Check key encryption)
+	unenc=0; \
+	for f in $(gpg_dir)/private-keys-v1.d/*.key; do \
+		[ -f "$$f" ] || continue; \
+		kg=$$(basename "$$f" .key); \
+		head=$$(head -c 200 "$$f"); \
+		case "$$head" in \
+			*protected-private-key*) echo "encrypted:   $$kg" ;; \
+			*shadowed-private-key*)  echo "on-card:     $$kg" ;; \
+			*private-key*)           echo "UNENCRYPTED: $$kg"; unenc=$$((unenc+1)) ;; \
+			*)                       echo "unknown:     $$kg" ;; \
+		esac; \
+	done; \
+	if [ $$unenc -eq 0 ]; then exit 0; fi; \
+	pass $(gpg_pass_entry) >/dev/null 2>&1 || { echo ""; echo "ERROR: pass $(gpg_pass_entry) not set. Run: pass insert -e $(gpg_pass_entry)"; exit 1; }; \
+	echo ""; \
+	echo "To encrypt (paste passphrase from: pass $(gpg_pass_entry)):"; \
+	echo "  gpg -K --with-keygrip      # find the FPR whose keygrip matches an UNENCRYPTED line above"; \
+	echo "  gpg --edit-key <FPR>"; \
+	echo "  gpg> passwd"; \
+	echo "  gpg> save"; \
+	exit 1
 
 ###############################################################################
 # SSH

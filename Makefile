@@ -188,9 +188,10 @@ $(claude_bin): $(node_bin) $(rg_bin)
 
 claude: $(claude_bin) ## Install Claude Code
 	$(call header,Claude Code - Configure)
-	mkdir -p $(claude_dir)
+	mkdir -p $(claude_dir) $(claude_dir)/skills
 	/bin/ln -fs $(CURDIR)/claude/settings.json $(claude_dir)/settings.json
 	/bin/ln -fs $(CURDIR)/claude/statusline-command.sh $(claude_dir)/statusline-command.sh
+	/bin/ln -fs $(CURDIR)/claude/skills/rephrase $(claude_dir)/skills/rephrase
 
 ###############################################################################
 # PostgreSQL

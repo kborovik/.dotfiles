@@ -31,10 +31,12 @@
       "args": [],
       "projects": [
         {
-          "paths": ["/home/ubuntu/mailpilot"],
-        },
-      ],
-    },
+          "paths": [
+            "/home/ubuntu/workflow-mailpilot"
+          ]
+        }
+      ]
+    }
   ],
   "agent": {
     "favorite_models": [

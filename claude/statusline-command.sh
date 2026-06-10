@@ -7,6 +7,11 @@ cwd=$(echo "$input" | jq -r '.cwd // empty')
 
 dir=$(basename "$cwd")
 
+# Real ESC byte. Lets us emit with `printf '%s'` — which, unlike `%b`, never
+# reinterprets backslashes in dynamic branch/dir names — plus a trailing
+# newline so the new flicker-free renderer measures the row correctly.
+ESC=$(printf '\033')
+
 if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   branch=$(git -C "$cwd" rev-parse --abbrev-ref HEAD 2>/dev/null)
   porcelain=$(git -C "$cwd" -c core.fsmonitor= status --porcelain 2>/dev/null)
@@ -41,14 +46,14 @@ $porcelain
 EOF
 
   # Catppuccin Macchiato — match fish __fish_git_prompt_color_* settings
-  CWD='\033[38;2;238;212;159m'      # yellow  eed49f
-  BRANCH='\033[38;2;139;213;202m'   # teal    8bd5ca
-  UPSTREAM='\033[38;2;138;173;244m' # blue    8aadf4
-  DIRTY='\033[38;2;237;135;150m'    # red     ed8796
-  UNTRACKED='\033[38;2;198;160;246m' # mauve  c6a0f6
-  STAGED='\033[38;2;166;218;149m'   # green   a6da95
-  CLEAN='\033[38;2;166;218;149m'    # green   a6da95
-  RESET='\033[0m'
+  CWD="${ESC}[38;2;238;212;159m"      # yellow  eed49f
+  BRANCH="${ESC}[38;2;139;213;202m"   # teal    8bd5ca
+  UPSTREAM="${ESC}[38;2;138;173;244m" # blue    8aadf4
+  DIRTY="${ESC}[38;2;237;135;150m"    # red     ed8796
+  UNTRACKED="${ESC}[38;2;198;160;246m" # mauve  c6a0f6
+  STAGED="${ESC}[38;2;166;218;149m"   # green   a6da95
+  CLEAN="${ESC}[38;2;166;218;149m"    # green   a6da95
+  RESET="${ESC}[0m"
 
   out="${CWD}${dir}${RESET}  ${BRANCH}${branch}${RESET}"
   [ "$ahead" -gt 0 ] && out="${out}  ${UPSTREAM}↑${ahead}${RESET}"
@@ -59,9 +64,9 @@ EOF
   if [ "$staged" -eq 0 ] && [ "$changed" -eq 0 ] && [ "$untracked" -eq 0 ]; then
     out="${out}  ${CLEAN}✓${RESET}"
   fi
-  printf "%b" "$out"
+  printf '%s\n' "$out"
 else
-  CWD='\033[38;2;238;212;159m'
-  RESET='\033[0m'
-  printf "${CWD}%s${RESET}" "$dir"
+  CWD="${ESC}[38;2;238;212;159m"
+  RESET="${ESC}[0m"
+  printf '%s\n' "${CWD}${dir}${RESET}"
 fi

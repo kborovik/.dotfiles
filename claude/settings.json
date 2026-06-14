@@ -1,7 +1,9 @@
 {
   "includeCoAuthoredBy": false,
   "permissions": {
-    "allow": ["WebSearch"],
+    "allow": [
+      "WebSearch"
+    ],
     "defaultMode": "auto"
   },
   "statusLine": {
@@ -9,9 +11,8 @@
     "command": "sh ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "sdd@pilot-skills": true,
-    "gh@pilot-skills": true,
-    "core@pilot-skills": true
+    "sdd@spec-driven-dev": true,
+    "skill-creator@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "pydantic-skills": {
@@ -21,15 +22,15 @@
       },
       "autoUpdate": true
     },
-    "pilot-skills": {
+    "spec-driven-dev": {
       "source": {
         "source": "github",
-        "repo": "kborovik/pilot-skills"
+        "repo": "kborovik/spec-driven-dev"
       },
       "autoUpdate": true
     }
   },
-  "autoUpdatesChannel": "stable",
+  "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-ansi",
   "editorMode": "vim",

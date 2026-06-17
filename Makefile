@@ -1,6 +1,6 @@
 .SILENT:
 .EXPORT_ALL_VARIABLES:
-.PHONY: default help init base tools zed claude pgsql ssh
+.PHONY: default help init base tools zed claude opencode pgsql ssh
 .PHONY: fish gpg git vim gitui glamour
 .PHONY: git-credentials-load git-credentials-save commit prompt ssh-save ssh-encrypt gpg-encrypt
 
@@ -193,6 +193,38 @@ claude: $(claude_bin) ## Install Claude Code
 	/bin/ln -fs $(CURDIR)/claude/statusline-command.sh $(claude_dir)/statusline-command.sh
 	rm -f $(claude_dir)/skills/rephrase && /bin/ln -fs $(CURDIR)/claude/skills/rephrase $(claude_dir)/skills/rephrase
 	rm -f $(claude_dir)/skills/commit && /bin/ln -fs $(CURDIR)/claude/skills/commit $(claude_dir)/skills/commit
+
+###############################################################################
+# opencode
+###############################################################################
+
+opencode_bin := $(HOME)/.opencode/bin/opencode
+opencode_dir := $(HOME)/.opencode
+opencode_config_dir := $(HOME)/.config/opencode
+
+$(opencode_bin): $(node_bin) $(rg_bin)
+	$(call header,opencode - Install)
+	curl -fsSL https://opencode.ai/install | bash
+
+opencode: $(opencode_bin) ## Install opencode
+	$(call header,opencode - Configure)
+	mkdir -p $(opencode_dir)/skills $(opencode_dir)/commands $(opencode_dir)/scripts $(opencode_config_dir)
+	/bin/ln -fs $(CURDIR)/opencode/opencode.jsonc $(opencode_config_dir)/opencode.jsonc
+	for d in $(CURDIR)/opencode/skills/*/; do \
+		name=$$(basename $$d); \
+		rm -rf $(opencode_dir)/skills/$$name; \
+		/bin/ln -fs $$d $(opencode_dir)/skills/$$name; \
+	done
+	for f in $(CURDIR)/opencode/commands/*.md; do \
+		name=$$(basename $$f); \
+		rm -f $(opencode_dir)/commands/$$name; \
+		/bin/ln -fs $$f $(opencode_dir)/commands/$$name; \
+	done
+	for f in $(CURDIR)/opencode/scripts/*; do \
+		name=$$(basename $$f); \
+		rm -f $(opencode_dir)/scripts/$$name; \
+		/bin/ln -fs $$f $(opencode_dir)/scripts/$$name; \
+	done
 
 ###############################################################################
 # PostgreSQL

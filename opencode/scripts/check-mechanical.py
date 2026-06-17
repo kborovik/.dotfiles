@@ -22,7 +22,7 @@ not for direct invocation"). Backtick-wrapped forms exempt — realized once
 here so the drift-detector retires its hand-run skill-body grep.
 Emits `grant|SKIP|…` — opencode skills do not use per-skill
 `allowed-tools` frontmatter; tool access is managed globally in
-`opencode.json`. This check is a no-op in opencode context (preserved
+`opencode.jsonc`. This check is a no-op in opencode context (preserved
 for cross-format compatibility).
                 Emits `batch|ADVISORY|recommended: <n> agents` — the
                 §V-classification sub-agent count from the §V row count +
@@ -1067,7 +1067,7 @@ def audit_dispatch_targets(skill_md):
 
 # --- allowed-tools grant-use audit (opencode: SKIP) --------------------------
 # Opencode skills do not use per-skill `allowed-tools` frontmatter; tool access
-# is managed globally in `opencode.json`. This check emits `grant|SKIP|…` rows
+# is managed globally in `opencode.jsonc`. This check emits `grant|SKIP|…` rows
 # for any `allowed-tools` lines found, noting they are not applicable in opencode.
 # Preserved for cross-format compatibility (Claude Code plugin format uses
 # allowed-tools). The grant-use body-reference logic remains for that compatibility.
@@ -1162,7 +1162,7 @@ def grant_used(token, body):
 def classify_grants(skill_texts):
     """Grant-use audit core over {path: text} — emits `grant|SKIP|…` rows
     for any `allowed-tools` frontmatter found (not applicable in opencode
-    where tool access is managed globally in `opencode.json`). Preserved for
+    where tool access is managed globally in `opencode.jsonc`). Preserved for
     cross-format compatibility. Skills without an `allowed-tools` line carry
     no grants → no rows."""
     out = []
@@ -1176,7 +1176,7 @@ def classify_grants(skill_texts):
                     "grant",
                     "SKIP",
                     f"grant SKIP: {path}:{lineno} has allowed-tools '{tok}' "
-                    f"(opencode manages tools in opencode.json, not per-skill)",
+                    f"(opencode manages tools in opencode.jsonc, not per-skill)",
                 )
             )
     return out
@@ -1185,7 +1185,7 @@ def classify_grants(skill_texts):
 def audit_grants(skill_md):
     """File-reading wrapper around classify_grants.
     Emits `grant|SKIP|…` for any `allowed-tools` frontmatter found in opencode
-    skills (not applicable — tool access is managed globally in `opencode.json`).
+    skills (not applicable — tool access is managed globally in `opencode.jsonc`).
     Preserved for cross-format compatibility."""
     texts = {}
     for path in skill_md:
@@ -2552,7 +2552,7 @@ def selftest():
     check(plugin_names("/no/such/repo") == [], "plugin_names: absent dir → empty")
 
     # allowed-tools grant-use audit: in opencode, any `allowed-tools` line emits SKIP
-    # (tool access is managed globally in opencode.json, not per-skill frontmatter).
+    # (tool access is managed globally in opencode.jsonc, not per-skill frontmatter).
     def _gk(tools, body):
         return f"---\nname: s\nallowed-tools: {tools}\n---\n\n# s\n\n{body}\n"
 

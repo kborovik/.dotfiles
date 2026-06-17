@@ -63,7 +63,7 @@ Input: gate triple (symptom + surface + recurrence-class).
 1. Parse bug.
 2. Find root cause (read code).
 3. New invariant would catch recurrence? yes → draft `V<next>`.
-4. Append §B row `B<next>|<date>|<cause>|<fix>` — fix cell `V<N>` when step 3 drafted, else `-` (per SPEC-FORMAT §B fix grammar).
+4. Append §B row `B<next>|<date>|<cause>|<fix>` — fix cell `V<N>` when step 3 drafted, else `-` (per SPEC-FORMAT.md §B fix grammar — `skills/spec/SPEC-FORMAT.md`).
 5. Drafted → append invariant to §V.
 6. Fix changes behavior → add/patch §T rows.
 
@@ -202,7 +202,7 @@ Catches class where SPEC.md amend invalidates derivative content in `skills/**` 
 
 ## OUTPUT RULES
 
-Defer to SPEC-FORMAT.md — row shape, section catalog, citation forms, header conventions.
+Read `skills/spec/SPEC-FORMAT.md` (deployed to `~/.opencode/skills/spec/SPEC-FORMAT.md`) — single source of truth for row shape, section catalog + order, citation forms, header conventions, archive-marker + archive-sibling shape. Direct read, not memorized — re-read every mode (NEW/DISTILL/BACKPROP/AMEND/FOLD-IN) before drafting delta.
 
 ## MECHANIZE — script-candidate scan
 

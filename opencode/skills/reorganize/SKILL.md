@@ -22,7 +22,7 @@ Distinct from the condense skill: condense = token reduction (folds, archives, t
 ## LOAD
 
 1. Read `SPEC.md`. Missing → "no spec, nothing to reorganize." Stop.
-2. Read `SPEC-FORMAT.md` every row schema and section catalog.
+2. Read `skills/spec/SPEC-FORMAT.md` (deployed to `~/.opencode/skills/spec/SPEC-FORMAT.md`) every row schema and section catalog.
 3. Parse `$ARGUMENTS`: empty → full cluster + renumber + sweep propose; `--taxonomy-only` → PROPOSE report only, not mutation.
 4. Discovery probe — repo-agnostic skill pack scope per published-scope invariant:
    - (a) `skills/*/SKILL.md` exists → parse frontmatter `name` field; PUBLISHED = all skill dirs found. `name` field absent → directory name as fallback. Internal sub-skills identified by description starting with "Internal — not for direct invocation".

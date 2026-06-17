@@ -15,14 +15,14 @@ Operator-triggered six-prong sweep. Scope: SPEC.md + `SPEC.archive.md` + `.openc
 ## LOAD
 
 1. Read `SPEC.md`. Missing → "no spec, nothing to condense." Stop.
-2. Read `SPEC-FORMAT.md` — row schema + section catalog.
+2. Read `skills/spec/SPEC-FORMAT.md` (deployed to `~/.opencode/skills/spec/SPEC-FORMAT.md`) — row schema + section catalog.
 3. Baseline tokens = bytes / `check-mechanical.py` `TOKEN_RATIO` (single source; not hardcode divisor). Record.
 
 ## PROPOSE
 
 Six prongs, execution order 1 → 6. Per prong: scan SPEC.md for trigger match; emit firing-set + skip-set w/ 1-line rationale each.
 
-Script modes below run `python3 scripts/check-mechanical.py <mode>`.
+Script modes below run `python3 ~/.opencode/scripts/check-mechanical.py <mode>`.
 
 ### Prong 1 — §V fold-first sweep
 

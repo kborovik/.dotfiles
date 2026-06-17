@@ -17,7 +17,7 @@ Pure diagnostic. Reports violations; writes nothing to SPEC or code; user decide
 
 ## LOAD
 
-1. Load spec overview (SCOPE, not whole-file Read per single-load invariant) — `python3 scripts/check-mechanical.py emit-overview`. Prints §G/§C/§I/§T/§B bodies + §V id list (no §V bodies — those arrive via `emit-v-slices` step 4; whole-file Read here double-loads SPEC.md + re-hits the Read token cap). Script exits non-zero "no SPEC.md" → "no spec, nothing to check." Stop.
+1. Load spec overview (SCOPE, not whole-file Read per single-load invariant) — `python3 ~/.opencode/scripts/check-mechanical.py emit-overview`. Prints §G/§C/§I/§T/§B bodies + §V id list (no §V bodies — those arrive via `emit-v-slices` step 4; whole-file Read here double-loads SPEC.md + re-hits the Read token cap). Script exits non-zero "no SPEC.md" → "no spec, nothing to check." Stop.
 2. Parse `$ARGUMENTS` (two forms only, per dispatch invariant):
    - bare → memo-driven default sweep: invariants + interfaces + tasks. Memo absent or invalidated → full re-classify. Fresh memo written on clean.
    - `--full` → delete `.opencode/check-state.json` upfront, classify all rows, propagate `--full` to audit script (restores per-row history listing instead of aggregation). Interrupt mid-run → no memo → next run also full ("don't trust cache" fails safe).
@@ -27,12 +27,12 @@ Pure diagnostic. Reports violations; writes nothing to SPEC or code; user decide
 
 ## MECHANICAL CORE — audit script
 
-Deterministic audit set — SPEC-FORMAT structural rules (section catalog + order, row grammar, rightmost-`|` column extraction, archive markers + sibling shape), `§T` cite / `§B` fix grammar, monotonic-ID, cite-DAG resolution + edge-type, history-residue patterns + pre-filters + oversized-cell advisory, pinned-invariant-header grep, MECHANIZE-block byte-identity across the user-invocable SKILL.md set, auto-fire sub-skill invocation ban, token estimate — owned by `scripts/check-mechanical.py`. Script regex is single source of truth; per-run paraphrase not permitted (mirrors canonical-agent-block verbatim contract) — the MECHANIZE-block check supersedes any hand-run `awk|md5|uniq` block sweep, the dispatch-target check any hand-run skill-body invocation grep.
+Deterministic audit set — SPEC-FORMAT structural rules (section catalog + order, row grammar, rightmost-`|` column extraction, archive markers + sibling shape), `§T` cite / `§B` fix grammar, monotonic-ID, cite-DAG resolution + edge-type, history-residue patterns + pre-filters + oversized-cell advisory, pinned-invariant-header grep, MECHANIZE-block byte-identity across the user-invocable SKILL.md set, auto-fire sub-skill invocation ban, token estimate — owned by `scripts/check-mechanical.py` (deployed to `~/.opencode/scripts/check-mechanical.py`). Script regex is single source of truth; per-run paraphrase not permitted (mirrors canonical-agent-block verbatim contract) — the MECHANIZE-block check supersedes any hand-run `awk|md5|uniq` block sweep, the dispatch-target check any hand-run skill-body invocation grep.
 
 Run at audit start (git stays unused — all rev-parse/show/diff run inside the script):
 
 ```
-python3 scripts/check-mechanical.py audit [--full]
+python3 ~/.opencode/scripts/check-mechanical.py audit [--full]
 ```
 
 Reads `SPEC.md` (+ `SPEC.archive.md` sibling if exists) from cwd; discovers PUBLISHED scope from `skills/*/SKILL.md` directory walk (`name` frontmatter = skill name; description starting with "Internal — not for direct invocation" = internal sub-skill); probes `.opencode/scripts/check-extras.sh` (exists + executable → run, append its `id|verdict|evidence` rows — language-agnostic contract). Emits pipe-table `id|verdict|evidence`:
@@ -43,7 +43,7 @@ Reads `SPEC.md` (+ `SPEC.archive.md` sibling if exists) from cwd; discovers PUBL
 - `pinned-header|VIOLATE|<file:line> …` — PUBLISHED body pins invariant number in header.
 - `mechanize|DRIFT|<path> … md5 <a> != <b>` / `mechanize|MISSING|<path> …` — user-invocable `skills/*/SKILL.md` (minus internal sub-skills `backprop`, `socratic`, `steno`, `telegraph`, `monitor`) carries the byte-identical canonical MECHANIZE block per mechanize-scan invariant; DRIFT = divergent block, MISSING = absent sentinel. Script-owned byte-identity check — never hand-run `awk|md5|uniq` per run.
 - `dispatch|VIOLATE|<path:line> … names internal sub-skill for direct invocation <cmd>` — a skill body names an internal sub-skill for direct invocation per response-shape invariant; direct invocation of internal skills is never a valid dispatch target (backtick-wrapped exempt). Sub-skill set derived from description convention — script-owned, never hand-grep skill bodies per run (closes §B.14).
-- `grant|SKIP|<path> tool unused, no frontmatter grants exist in opencode>` — opencode skills do not use `allowed-tools` frontmatter; tool access is managed globally in `opencode.json`. This check is a no-op in opencode context (preserved for cross-format compatibility).
+- `grant|SKIP|<path> tool unused, no frontmatter grants exist in opencode>` — opencode skills do not use `allowed-tools` frontmatter; tool access is managed globally in `opencode.jsonc` (deployed to `~/.config/opencode/opencode.jsonc`). This check is a no-op in opencode context (preserved for cross-format compatibility).
 - `token|ADVISORY|SPEC.md ~<n>k tokens > budget …` — estimate `bytes/3.4` per token-budget invariant.
 - `memo|ADVISORY|<trigger>` — invalidation (`schema_version` mismatch or `last_clean_sha` unreachable → drop memo, full sweep) or scope feed `v_row_shas drift: V<n>,…`.
 - `tasks|ADVISORY|flipped-since-clean: T<n>,…` — §T rows flipped `.`→`x` since clean sha.
@@ -87,7 +87,7 @@ First-run, invalidated memo, or `--full` → classify all §V rows.
 §V bodies for the classified set:
 
 ```
-python3 scripts/check-mechanical.py emit-v-slices [--dirty V<n>,...]
+python3 ~/.opencode/scripts/check-mechanical.py emit-v-slices [--dirty V<n>,...]
 ```
 
 Prints each §V row body w/ source range — header `## V<n> SPEC.md:<start>-<end>` + verbatim row text. `--dirty` = comma-list from step 1; omit on first-run / `--full` (all rows). Sidesteps Read pagination, not bulk-load cost: single-agent path loads full slice set in-thread (may spill to persisted file past inline output cap); sub-agent batches distribute per spawn.
@@ -242,13 +242,13 @@ SPEC.md ~30k tokens > 20k budget; consider invoking the condense skill
 Source the live id-set skeleton from the script — never hand-enumerate (closes omitted-row silent-undercoverage class):
 
 ```
-python3 scripts/check-mechanical.py emit-row-ids
+python3 ~/.opencode/scripts/check-mechanical.py emit-row-ids
 ```
 
 Emits one blank-verdict row per live §V/§I/§T id (`id||`, header `id|verdict|evidence`). Fill verdicts + evidence from REPORT classification — behavioral rows only (§V/§I/§T); never hand-merge the `audit` mechanical rows (memo invariant). Feed the filled skeleton to stdin; `--from-audit` re-runs the mechanical audit internally + merges it:
 
 ```
-python3 scripts/check-mechanical.py write-memo --from-audit < <filled-skeleton>
+python3 ~/.opencode/scripts/check-mechanical.py write-memo --from-audit < <filled-skeleton>
 ```
 
 Script merges its internal mechanical audit w/ the behavioral rows, validates vocab per row type, computes clean-set membership (clean iff no VIOLATE / UNVERIFIABLE / UNRESOLVED / TYPE-MISMATCH / DRIFT / MISSING / STALE / EXTRA), writes memo only when clean (schema v3, per-row hashes, `last_clean_sha` = HEAD, oversized-cell ack, `.gitignore` guard). Exit `0` = clean (memo advanced); `1` = dirty (memo untouched, offenders on stderr — CI-gateable); `2` = invalid vocab. `## checkpoint` line reflects the outcome.

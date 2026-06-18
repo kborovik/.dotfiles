@@ -35,7 +35,7 @@ SPEC.md presence is the only branch (mode is gate byproduct, not user-typed pref
 1. no SPEC.md @ repo root → gate restricted to {NEW, DISTILL}.
 2. SPEC.md exists → gate ranges over {BACKPROP, AMEND, NEW}; NEW rare → require explicit re-init confirmation before overwrite.
 
-Post-convergence → run mode procedure below. Concrete first-turn input → gate passes ≤ 1 turn (zero-friction); vague → dialogue until convergence. No skip flag, no prefix back-doors.
+Post-convergence → run mode procedure below. Escape hatch triggered with unmet-criteria → run mode procedure on partial-facts, append unmet facts as inline callouts or bullet points within §G GOAL or §C CONSTRAINTS to preserve gap visibility. Concrete first-turn input → gate passes ≤ 1 turn (zero-friction); vague → dialogue until convergence. No skip flag, no prefix back-doors.
 
 ## NEW — idea → spec
 
@@ -104,6 +104,8 @@ Five steps in order; audits fire on condition, not mode authorship. All audits r
 - delta adds or rewrites §B `cause` cell → one-line trim per WRITE-TIME PRUNE §.
 - pruned content → commit-msg body (step 4); step 3 shows post-prune form.
 
+**Step 0.5 — empty-delta check**: pruned delta matches live SPEC.md exactly → print "Spec already matches current state; no changes needed." and exit gracefully (skip audits, show-user, and commit).
+
 **Step 1 — audit table** (on-fail column names owning § — bail strings + sub-recipe detail live there only):
 
 ```
@@ -122,7 +124,7 @@ Table uses named-invariant + placeholder cite form only (`per <named> invariant`
 
 **Step 3 — show-user**: render diff preview; await user OK.
 
-**Step 4 — write + commit**: on OK → write SPEC.md (telegraph) + auto-commit path-scoped `git commit -m <subject> [-m <body>] -- SPEC.md` (write-ownership invariant — scopes to SPEC.md, pre-staged files never leak); `-m` flags ! precede `--` — message tokens after `--` parse as pathspecs, commit fails; no commit prompt (uniform every mode). Msg per mode:
+**Step 4 — write + commit**: on OK → write SPEC.md (telegraph) + auto-commit path-scoped `git commit -m "<subject>" [-m "<body>"] -- SPEC.md` (double-quote message parameters to prevent zsh and other shell expansion errors; write-ownership invariant — scopes to SPEC.md, pre-staged files never leak); `-m` flags ! precede `--` — message tokens after `--` parse as pathspecs, commit fails; no commit prompt (uniform every mode). Msg per mode:
 
 ```
 NEW      → init SPEC.md (V<1>..V<n>, T<1>..T<m>)
@@ -163,17 +165,17 @@ Defends against new user-typeable skill bodies (or cross-skill-pack migrations) 
 
 Per fold-first authoring invariant (§V.<n>). Mechanical decision-gate.
 
-Each proposed new §V row in delta:
+Each proposed new §V row in delta (provisional ID `V<next>`):
 
-1. Closest existing §V row by topic — heuristic: shared scope tokens (e.g. `PUBLISHED`, `GITHUB-FACING`, `SPEC-ADJACENT`), shared procedure ref (e.g. invoking the spec skill, invoking the check skill), shared verb pattern (e.g. `audit`, `auto-fire`, `gate`). None identifiable → step 3 w/ "no fold candidate" note.
+1. Closest existing §V row by topic — heuristic: shared scope tokens (e.g. `PUBLISHED`, `GITHUB-FACING`, `SPEC-ADJACENT`), shared procedure ref (e.g. invoking the spec skill, invoking the check skill), shared verb pattern (e.g. `audit`, `auto-fire`, `gate`). None identifiable → skip AskUserQuestion, auto-route as orthogonal-concept new row.
 2. AskUserQuestion per decision-gate invariant (§V.<n>):
    - **question**: `New §V row proposed: <delta one-line>. Closest existing row §V.<m>: <m-summary>. Fold into existing or split as new row?`
    - **header**: `Fold-first`
    - **options** (3, mutually exclusive, label = action):
-     - `Fold into §V.<m>` → reroute delta as §V.<m> amend (inline addition to existing row).
+     - `Fold into §V.<m>` → reroute delta as §V.<m> amend (inline addition to existing row), rewriting any co-occurring references to provisional `V<next>` (e.g., in §B.fix or §T.cites in the same delta) to point to `V<m>`.
      - `New row (cite §B recurrence-class)` → proceed; requires §B.<k> cite in delta justifying split (audit greps `§B\.[0-9]+` post-selection).
      - `New row (orthogonal concept)` → proceed; user-typed orthogonal-concept declaration recorded in commit msg post-selection.
-3. Fold-into → re-render delta as §V.<m> amend, re-enter APPLY @ step 0 per Re-entry rule (re-prune + re-audit — not jump to show-user); new-row branches → record justification, proceed to show-user.
+3. Fold-into → re-render delta as §V.<m> amend (including rewritten co-proposed references), re-enter APPLY @ step 0 per Re-entry rule (re-prune + re-audit — not jump to show-user); new-row branches → record justification, proceed to show-user.
 
 Defends against premature-split class — small audit or enforcement-meta additions creating new §V row when inline amend sufficed. "mirrors §V.<n>" alone insufficient justification per fold-first authoring invariant.
 
@@ -203,6 +205,8 @@ Catches class where SPEC.md amend invalidates derivative content in `skills/**` 
 ## OUTPUT RULES
 
 Read `skills/spec/SPEC-FORMAT.md` (deployed to `~/.opencode/skills/spec/SPEC-FORMAT.md`) — single source of truth for row shape, section catalog + order, citation forms, header conventions, archive-marker + archive-sibling shape. Direct read, not memorized — re-read every mode (NEW/DISTILL/BACKPROP/AMEND/FOLD-IN) before drafting delta.
+
+Monotonic ID Generation: Compute any new `V<next>`, `T<next>`, or `B<next>` IDs by finding the absolute maximum ID across both `SPEC.md` and `SPEC.archive.md` (if present) and incrementing it, guaranteeing no ID reuse or collision with archived rows.
 
 ## MECHANIZE — script-candidate scan
 

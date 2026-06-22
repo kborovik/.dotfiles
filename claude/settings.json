@@ -6,6 +6,7 @@
     ],
     "defaultMode": "auto"
   },
+  "workflowKeywordTriggerEnabled": false,
   "statusLine": {
     "type": "command",
     "command": "sh ~/.claude/statusline-command.sh"
@@ -31,9 +32,13 @@
     }
   },
   "effortLevel": "xhigh",
+  "autoUpdatesChannel": "stable",
+  "minimumVersion": "2.1.185",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-ansi",
   "editorMode": "vim",
+  "fileCheckpointingEnabled": true,
+  "inputNeededNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "autoUpdatesChannel": "latest"
+  "agentPushNotifEnabled": true
 }

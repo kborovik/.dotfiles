@@ -58,6 +58,9 @@
 [tag]
 	sort = version:refname
 
+[push]
+	recurseSubmodules = on-demand
+
 [credential]
 	helper = store --file ~/.git-credentials
 

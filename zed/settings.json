@@ -1,4 +1,9 @@
 {
+  "show_completion_documentation": false,
+  "show_completions_on_input": false,
+  "completions": {
+    "lsp": false,
+  },
   "agent_servers": {
     "claude-acp": {
       "type": "registry",
@@ -31,12 +36,10 @@
       "args": [],
       "projects": [
         {
-          "paths": [
-            "/home/ubuntu/workflow-mailpilot"
-          ]
-        }
-      ]
-    }
+          "paths": ["/home/ubuntu/workflow-mailpilot"],
+        },
+      ],
+    },
   ],
   "agent": {
     "favorite_models": [

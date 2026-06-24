@@ -47,4 +47,16 @@
       "cmd-0": "pane::ActivateLastItem",
     },
   },
+  {
+    "context": "Editor && edit_prediction",
+    "unbind": {
+      "alt-tab": "editor::AcceptEditPrediction",
+    },
+  },
+  {
+    "context": "Editor && edit_prediction",
+    "bindings": {
+      "tab": "editor::AcceptEditPrediction",
+    },
+  },
 ]

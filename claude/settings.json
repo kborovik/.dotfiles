@@ -32,13 +32,14 @@
     }
   },
   "effortLevel": "xhigh",
-  "autoUpdatesChannel": "stable",
-  "minimumVersion": "2.1.185",
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
   "theme": "dark-ansi",
   "editorMode": "vim",
   "fileCheckpointingEnabled": true,
   "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "agentPushNotifEnabled": true
+  "model": "claude-fable-5[1m]"
 }

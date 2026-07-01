@@ -1,8 +1,8 @@
 {
   "show_completion_documentation": false,
-  "show_completions_on_input": false,
+  "show_completions_on_input": true,
   "completions": {
-    "lsp": false,
+    "lsp": true,
   },
   "agent_servers": {
     "claude-acp": {
@@ -81,7 +81,7 @@
     },
   },
   "edit_predictions": {
-    "mode": "subtle",
+    "mode": "eager",
   },
   "agent_buffer_font_size": 19.0,
   "agent_ui_font_size": 19.0,
@@ -138,6 +138,10 @@
     },
     "Markdown": {
       "format_on_save": "off",
+    },
+    "TOML": {
+      "allow_rewrap": "anywhere",
+      "soft_wrap": "editor_width",
     },
     "Fish": {
       "format_on_save": "on",

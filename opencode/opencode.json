@@ -5,5 +5,15 @@
       "/tmp/**": "allow",
       "~/.opencode/scripts/**": "allow"
     }
+  },
+  "mcp": {
+    "tavily": {
+      "type": "remote",
+      "url": "https://mcp.tavily.com/mcp/"
+    },
+    "firecrawl": {
+      "type": "remote",
+      "url": "https://mcp.firecrawl.dev/v2/mcp"
+    }
   }
 }

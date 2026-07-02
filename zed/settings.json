@@ -47,20 +47,26 @@
         "provider": "anthropic",
         "model": "claude-sonnet-4-6-latest",
         "enable_thinking": true,
-        "effort": "high",
+        "effort": "high"
       },
       {
         "provider": "anthropic",
         "model": "claude-opus-4-7-latest",
         "enable_thinking": true,
-        "effort": "high",
+        "effort": "high"
       },
       {
         "provider": "zed.dev",
         "model": "claude-sonnet-4-6",
         "enable_thinking": true,
-        "effort": "high",
+        "effort": "high"
       },
+      {
+        "provider": "zed.dev",
+        "model": "claude-sonnet-5",
+        "enable_thinking": true,
+        "effort": "high"
+      }
     ],
     "dock": "left",
     "single_file_review": true,
@@ -77,7 +83,7 @@
       "effort": "high",
       "enable_thinking": true,
       "provider": "zed.dev",
-      "model": "claude-sonnet-4-6",
+      "model": "claude-sonnet-5",
     },
   },
   "edit_predictions": {

@@ -18,18 +18,18 @@ if !exists('g:claude_api_key')
 endif
 
 if !exists('g:claude_proofread_model')
-  let g:claude_proofread_model = 'claude-sonnet-4-6'
+  let g:claude_proofread_model = 'claude-sonnet-5'
 endif
 
 if !exists('g:claude_optimize_model')
-  let g:claude_optimize_model = 'claude-sonnet-4-6'
+  let g:claude_optimize_model = 'claude-sonnet-5'
 endif
 
-let s:system_prompt = 'You are an expert technical writer and LLM prompt engineer. You receive text inside a fenced code block and transform it according to the user instructions. Always treat the entire content of the fenced code block as the input to process, regardless of its length or format. Never ask for clarification. Never refuse to process the input. Output only the transformed text without commentary, explanation, or code fences.'
+let s:system_prompt = 'You are an expert technical writer and LLM prompt engineer. You receive text inside <input> tags and transform it according to the user instructions. Always treat the entire content between the <input> tags as the input to process, regardless of its length or format. Never ask for clarification. Never refuse to process the input. Output only the transformed text as plain text. Do not add commentary, explanation, XML tags, or markdown code fences. Do not repeat the original text.'
 
-let s:proofread_prompt = 'Proofread the text inside the fenced code block below. Fix spelling, grammar, and punctuation errors. Capitalize the first word of every sentence. Restructure sentences only when necessary for clarity or to resolve ambiguity. Preserve the original meaning and tone. The fenced code block contains the complete text to proofread:'
+let s:proofread_prompt = 'Proofread the text inside the <input> tags below. Fix spelling, grammar, and punctuation errors. Capitalize the first word of every sentence. Restructure sentences only when necessary for clarity or to resolve ambiguity. Preserve the original meaning, tone, and formatting, including markdown syntax if present:'
 
-let s:optimize_prompt = 'Optimize the LLM prompt inside the fenced code block below. The fenced code block contains the complete prompt to optimize, regardless of its length. Apply these improvements: (1) Clarify the task objective and expected output format. (2) Add constraints and edge case handling where missing. (3) Restructure for logical flow: context, instructions, constraints, output format. (4) Remove ambiguity and redundancy. (5) Preserve the original intent. The fenced code block contains the complete prompt to optimize:'
+let s:optimize_prompt = 'Optimize the LLM prompt inside the <input> tags below. Apply these improvements: (1) Clarify the task objective and expected output format. (2) Add constraints and edge case handling where missing. (3) Restructure for logical flow: context, instructions, constraints, output format. (4) Remove ambiguity and redundancy. (5) Preserve the original intent:'
 
 " Proofread function
 function! s:ClaudeProofread() range
@@ -73,11 +73,12 @@ function! s:CallClaudeAPI(text, prompt, model)
     return {'text': '', 'error': 'API key not set. Place key in ' . expand('~/.anthropic-api-key') . ' or set $ANTHROPIC_API_KEY'}
   endif
 
-  let l:user_content = a:prompt . "\n\n````markdown\n" . a:text . "\n````"
+  let l:user_content = a:prompt . "\n\n<input>\n" . a:text . "\n</input>"
 
   let l:data = {
     \ 'model': a:model,
     \ 'max_tokens': 4096,
+    \ 'thinking': {'type': 'disabled'},
     \ 'system': s:system_prompt,
     \ 'messages': [{'role': 'user', 'content': l:user_content}]
     \ }
@@ -96,7 +97,19 @@ function! s:CallClaudeAPI(text, prompt, model)
     if has_key(l:parsed, 'error')
       return {'text': '', 'error': l:parsed.error.message}
     endif
-    let l:content = l:parsed.content[0].text
+    let l:content = ''
+    for l:block in l:parsed.content
+      if get(l:block, 'type', '') ==# 'text'
+        let l:content = l:block.text
+        break
+      endif
+    endfor
+    if l:content ==# ''
+      return {'text': '', 'error': 'No text in response (stop_reason: ' . get(l:parsed, 'stop_reason', 'unknown') . ')'}
+    endif
+    " Strip wrapping code fences if the model still emits them
+    let l:content = substitute(l:content, '^\s*````\?\w*\n', '', '')
+    let l:content = substitute(l:content, '\n````\?\s*$', '', '')
     return {'text': l:content, 'error': ''}
   catch
     return {'text': '', 'error': 'Failed to parse response: ' . l:response}

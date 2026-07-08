@@ -6,6 +6,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "claude-fable-5[1m]",
   "workflowKeywordTriggerEnabled": false,
   "statusLine": {
     "type": "command",
@@ -31,7 +32,6 @@
       "autoUpdate": true
     }
   },
-  "effortLevel": "xhigh",
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
@@ -40,6 +40,5 @@
   "fileCheckpointingEnabled": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "model": "claude-fable-5[1m]"
+  "skipAutoPermissionPrompt": true
 }

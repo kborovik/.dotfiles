@@ -208,6 +208,7 @@ $(opencode_bin): $(node_bin) $(rg_bin)
 opencode: $(opencode_bin) ## Install opencode
 	$(call header,opencode - Configure)
 	mkdir -p $(opencode_dir)/skills $(opencode_dir)/commands $(opencode_dir)/scripts $(opencode_config_dir)
+	rm -f $(opencode_config_dir)/opencode.json
 	/bin/ln -fs $(CURDIR)/opencode/opencode.jsonc $(opencode_config_dir)/opencode.jsonc
 	for d in $(CURDIR)/opencode/skills/*/; do \
 		name=$$(basename $$d); \

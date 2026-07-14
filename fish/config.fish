@@ -104,6 +104,10 @@ if status is-interactive
         command shred -ufv $argv
     end
 
+    function commit --description 'create git commit using opencode cli'
+        opencode run --variant high --thinking false 'Commit the staged git changes only (do not stage anything). Write the commit message in Conventional Commits format using the steno skill: a concise type(scope): subject line, and a body only if the changes need explanation. Do not add any Claude/AI attribution or trailers.'
+    end
+
     if test (uname) = Darwin; and test -x $HOMEBREW_PREFIX/bin/gln
         function ln --description 'GNU ln replacement'
             $HOMEBREW_PREFIX/bin/gln $argv

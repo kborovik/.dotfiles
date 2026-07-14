@@ -6,7 +6,6 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
   "workflowKeywordTriggerEnabled": false,
   "statusLine": {
     "type": "command",

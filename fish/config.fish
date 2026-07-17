@@ -15,6 +15,7 @@ if status is-interactive
         ~/.opencode/bin \
         ~/.bun/bin \
         ~/.npm-global/bin \
+        ~/.grok/bin \
         $HOMEBREW_PREFIX/opt/make/libexec/gnubin \
         $HOMEBREW_PREFIX/opt/postgresql@18/bin \
         $PNPM_HOME

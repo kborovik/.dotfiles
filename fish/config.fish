@@ -9,13 +9,13 @@ if status is-interactive
 
     fish_add_path --global \
         ~/.claude/local \
+        ~/.grok/bin \
         ~/go/bin \
         ~/.cargo/bin \
         ~/.local/bin \
         ~/.opencode/bin \
         ~/.bun/bin \
         ~/.npm-global/bin \
-        ~/.grok/bin \
         $HOMEBREW_PREFIX/opt/make/libexec/gnubin \
         $HOMEBREW_PREFIX/opt/postgresql@18/bin \
         $PNPM_HOME
@@ -105,8 +105,8 @@ if status is-interactive
         command shred -ufv $argv
     end
 
-    function commit --description 'create git commit using opencode cli'
-        opencode run --variant high 'Commit the staged git changes only (do not stage anything). Write the commit message in Conventional Commits format using the steno skill: a concise type(scope): subject line, and a body only if the changes need explanation. Do not add any Claude/AI attribution or trailers.'
+    function commit --description 'git commit staged changes'
+        grok -p 'Commit the staged git changes only (do not stage anything). Write the commit message in Conventional Commits format using the steno skill: a concise type(scope): subject line, and a body only if the changes need explanation. Do not add any Claude/AI attribution or trailers.'
     end
 
     if test (uname) = Darwin; and test -x $HOMEBREW_PREFIX/bin/gln

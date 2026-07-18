@@ -1,0 +1,11 @@
+# Shared brew-first PATH for non-interactive agent shells (bash + zsh).
+# Sourced by bashenv (via BASH_ENV) and zshenv (always for every zsh).
+# Mirror of fish config.fish PATH order: Homebrew + keg-only first.
+#
+# Installed as ~/.pathenv via `make base`. Do not export BASH_ENV here —
+# leave that to bashenv so pure PATH consumers stay shell-neutral.
+
+# shellcheck disable=SC2123
+PATH="/opt/homebrew/opt/make/libexec/gnubin:/opt/homebrew/opt/postgresql@18/bin:/opt/homebrew/bin:/opt/homebrew/sbin:${HOME}/.local/bin:${HOME}/go/bin:${HOME}/.grok/bin:${PATH}"
+export PATH
+export HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/opt/homebrew}"

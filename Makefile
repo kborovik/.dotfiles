@@ -133,7 +133,9 @@ tools: $(coreutils_bin) $(sed_bin) $(gmake_bin) $(jq_bin) $(pass_bin) $(gh_bin) 
 
 base: tools $(fish_bin) gpg $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin) $(glow_bin) $(bat_bin) ## Install base tools and configs
 	$(call header,Base - Configure)
+	/bin/ln -fs $(CURDIR)/pathenv $(HOME)/.pathenv
 	/bin/ln -fs $(CURDIR)/zshenv $(HOME)/.zshenv
+	/bin/ln -fs $(CURDIR)/bashenv $(HOME)/.bashenv
 	/bin/ln -fs $(CURDIR)/digrc $(HOME)/.digrc
 	rm -f $(HOME)/.config/fish && /bin/ln -fs $(CURDIR)/fish $(HOME)/.config/fish
 	/bin/ln -fs $(CURDIR)/gitconfig $(HOME)/.gitconfig

@@ -15,5 +15,6 @@ The Makefile uses binary-path prerequisites for idempotent installs.
 - Makefile must stay compatible with macOS `/usr/bin/make` (GNU Make 3.81)
 - Use `/bin/ln -fs` for symlinks (not GNU ln) to keep Makefile portable
 - `gitconfig` is at repo root (not in a subdirectory) — symlinked to `~/.gitconfig`
-- `zshenv` only exists to set PATH for non-interactive zsh (fish is the primary shell)
+- Fish is the primary shell; `pathenv` is the shared brew-first PATH for agents
+- `bashenv` (via `BASH_ENV`) and `zshenv` both source `pathenv` for non-interactive bash/zsh
 - Git pager uses `riff` (not less/delta) for syntax-highlighted diffs

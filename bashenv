@@ -1,11 +1,11 @@
 # bash env — for non-interactive bash (Grok/Claude agent tools, BASH_ENV).
-# Mirror of zshenv / fish config.fish PATH order: Homebrew + keg-only first.
+# PATH lives in pathenv (shared with zsh). This file only wires bash activation.
 #
-# Activate for non-interactive bash:
-#   export BASH_ENV="$HOME/.dotfiles/bashenv"
-# (or symlink/copy into a location your agent already sources)
+# Installed as ~/.bashenv via `make base`. Activated when the parent shell
+# exports BASH_ENV (fish config.fish + zshenv set this for all invocations).
 
-# shellcheck disable=SC2123
-PATH="/opt/homebrew/opt/make/libexec/gnubin:/opt/homebrew/opt/postgresql@18/bin:/opt/homebrew/bin:/opt/homebrew/sbin:${HOME}/.local/bin:${HOME}/go/bin:${HOME}/.grok/bin:${PATH}"
-export PATH
-export HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/opt/homebrew}"
+# shellcheck source=pathenv
+. "${HOME}/.pathenv"
+
+# Nested bash (scripts that spawn bash -c) keeps the same env file.
+export BASH_ENV="${BASH_ENV:-$HOME/.bashenv}"

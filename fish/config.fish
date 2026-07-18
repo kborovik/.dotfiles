@@ -1,24 +1,32 @@
+# Always — inherited by Grok / Claude / non-interactive fish / child processes.
+# Keep this outside `is-interactive` so agent tool shells get brew-first PATH.
+# Bash children: BASH_ENV → ~/.bashenv → ~/.pathenv
+# Zsh children: always source ~/.zshenv → ~/.pathenv (no env var needed)
+set --global --export HOMEBREW_PREFIX /opt/homebrew
+set --global --export PNPM_HOME ~/Library/pnpm
+set --global --export BASH_ENV $HOME/.bashenv
+
+if test (uname) = Darwin; and test -x $HOMEBREW_PREFIX/bin/brew
+    eval ($HOMEBREW_PREFIX/bin/brew shellenv)
+end
+
+# --move: put these ahead of /usr/bin even if already on PATH
+fish_add_path --global --move --path \
+    ~/.claude/local \
+    ~/.grok/bin \
+    ~/go/bin \
+    ~/.cargo/bin \
+    ~/.local/bin \
+    ~/.opencode/bin \
+    ~/.bun/bin \
+    ~/.npm-global/bin \
+    $HOMEBREW_PREFIX/opt/make/libexec/gnubin \
+    $HOMEBREW_PREFIX/opt/postgresql@18/bin \
+    $HOMEBREW_PREFIX/bin \
+    $HOMEBREW_PREFIX/sbin \
+    $PNPM_HOME
+
 if status is-interactive
-
-    set --global --export HOMEBREW_PREFIX /opt/homebrew
-    set --global --export PNPM_HOME ~/Library/pnpm
-
-    if test (uname) = Darwin; and test -x $HOMEBREW_PREFIX/bin/brew
-        eval ($HOMEBREW_PREFIX/bin/brew shellenv)
-    end
-
-    fish_add_path --global \
-        ~/.claude/local \
-        ~/.grok/bin \
-        ~/go/bin \
-        ~/.cargo/bin \
-        ~/.local/bin \
-        ~/.opencode/bin \
-        ~/.bun/bin \
-        ~/.npm-global/bin \
-        $HOMEBREW_PREFIX/opt/make/libexec/gnubin \
-        $HOMEBREW_PREFIX/opt/postgresql@18/bin \
-        $PNPM_HOME
 
     set --global --export EDITOR vim
     set --global --export VISUAL vim

@@ -22,13 +22,6 @@
         "repo": "pydantic/skills"
       },
       "autoUpdate": true
-    },
-    "spec-driven-dev": {
-      "source": {
-        "source": "github",
-        "repo": "kborovik/spec-driven-dev"
-      },
-      "autoUpdate": true
     }
   },
   "effortLevel": "xhigh",

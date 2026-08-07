@@ -1,6 +1,6 @@
 .SILENT:
 .EXPORT_ALL_VARIABLES:
-.PHONY: default help init base tools zed claude opencode pgsql ssh
+.PHONY: default help init base tools zed claude grok opencode pgsql ssh
 .PHONY: fish gpg git vim gitui glamour
 .PHONY: git-credentials-load git-credentials-save commit prompt ssh-save ssh-encrypt gpg-encrypt
 
@@ -194,6 +194,22 @@ claude: $(claude_bin) ## Install Claude Code
 	/bin/ln -fs $(CURDIR)/claude/settings.json $(claude_dir)/settings.json
 	/bin/ln -fs $(CURDIR)/claude/statusline-command.sh $(claude_dir)/statusline-command.sh
 	rm -f $(claude_dir)/skills/rephrase && /bin/ln -fs $(CURDIR)/claude/skills/rephrase $(claude_dir)/skills/rephrase
+
+###############################################################################
+# Grok Build
+###############################################################################
+
+grok_bin := $(HOME)/.local/bin/grok
+grok_dir := $(HOME)/.grok
+
+$(grok_bin):
+	$(call header,Grok - Install)
+	curl -fsSL https://x.ai/cli/install.sh | bash
+
+grok: $(grok_bin) ## Install Grok Build CLI
+	$(call header,Grok - Configure)
+	mkdir -p $(grok_dir)
+	/bin/ln -fs $(CURDIR)/grok/config.toml $(grok_dir)/config.toml
 
 ###############################################################################
 # opencode

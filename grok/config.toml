@@ -1,0 +1,46 @@
+[cli]
+installer = "internal"
+
+[ui]
+max_thoughts_width = 120
+fork_secondary_model = "grok-build"
+yolo = false
+compact_mode = false
+vim_mode = true
+permission_mode = "always-approve"
+
+[marketplace]
+official_marketplace_auto_installed = true
+default_skills_installs_purged = true
+
+[[marketplace.sources]]
+name = "xAI Official"
+git = "https://github.com/xai-org/plugin-marketplace.git"
+
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = [
+    "-y",
+    "chrome-devtools-mcp@latest",
+    "--autoConnect",
+]
+enabled = true
+startup_timeout_sec = 60
+
+[plugins]
+enabled = []
+
+[compat.claude]
+skills = false
+rules = false
+agents = false
+mcps = false
+hooks = false
+sessions = false
+
+[skills]
+paths = []
+ignore = []
+disabled = []
+server_skill_dirs = []
+bundled_skill_dirs = []

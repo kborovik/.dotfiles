@@ -15,15 +15,7 @@
     "sdd@spec-driven-dev": true,
     "skill-creator@claude-plugins-official": true
   },
-  "extraKnownMarketplaces": {
-    "pydantic-skills": {
-      "source": {
-        "source": "github",
-        "repo": "pydantic/skills"
-      },
-      "autoUpdate": true
-    }
-  },
+  "extraKnownMarketplaces": {},
   "effortLevel": "xhigh",
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,

@@ -27,9 +27,6 @@ args = [
 enabled = true
 startup_timeout_sec = 60
 
-[plugins]
-enabled = []
-
 [compat.claude]
 skills = false
 rules = false
@@ -38,9 +35,5 @@ mcps = false
 hooks = false
 sessions = false
 
-[skills]
-paths = []
-ignore = []
-disabled = []
-server_skill_dirs = []
-bundled_skill_dirs = []
+[plugins]
+enabled = ["sdd"]

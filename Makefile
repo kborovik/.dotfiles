@@ -1,7 +1,7 @@
 .SILENT:
 .EXPORT_ALL_VARIABLES:
 .PHONY: default help init base tools zed claude grok opencode pgsql ssh
-.PHONY: fish gpg git vim gitui glamour
+.PHONY: fish fish-completions gpg git vim gitui glamour
 .PHONY: git-credentials-load git-credentials-save commit prompt ssh-save ssh-encrypt gpg-encrypt
 
 MAKEFLAGS += --no-builtin-rules --no-builtin-variables
@@ -149,6 +149,28 @@ base: tools $(fish_bin) gpg $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin) $(glo
 	mkdir -p $(HOME)/Library/Preferences/glow
 	/bin/ln -fs $(CURDIR)/glow/glow.yml $(HOME)/Library/Preferences/glow/glow.yml
 	/bin/ln -fs $(CURDIR)/glamour/glamour-custom.json $(HOME)/Library/Preferences/glow/glamour-custom.json
+	$(MAKE) fish-completions
+
+# bat/glow/uv: Homebrew vendor completions. grok/wrangler: generate when installed.
+fish-completions: ## Generate optional fish completions (grok, wrangler)
+	$(call header,fish - Completions)
+	rm -f $(CURDIR)/fish/completions/bat.fish
+	rm -f $(CURDIR)/fish/completions/glow.fish
+	rm -f $(CURDIR)/fish/completions/uv.fish
+	if command -v grok >/dev/null 2>&1; then \
+		grok completions fish > $(CURDIR)/fish/completions/grok.fish; \
+		echo "  grok.fish regenerated"; \
+	else \
+		rm -f $(CURDIR)/fish/completions/grok.fish; \
+		echo "  grok not installed — skipped"; \
+	fi
+	if command -v wrangler >/dev/null 2>&1; then \
+		wrangler completions fish > $(CURDIR)/fish/completions/wrangler.fish; \
+		echo "  wrangler.fish regenerated"; \
+	else \
+		rm -f $(CURDIR)/fish/completions/wrangler.fish; \
+		echo "  wrangler not installed — skipped"; \
+	fi
 
 ###############################################################################
 # Zed Editor

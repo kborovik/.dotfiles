@@ -4,4 +4,10 @@
 .DS_Store
 .firecrawl/
 fish/fish_variables
+# Generated / vendor-shadowing completions (see `make fish-completions`)
+fish/completions/bat.fish
+fish/completions/glow.fish
+fish/completions/grok.fish
+fish/completions/uv.fish
+fish/completions/wrangler.fish
 ssh/config

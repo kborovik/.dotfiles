@@ -2,6 +2,7 @@
 # Keep this outside `is-interactive` so agent tool shells get brew-first PATH.
 # Bash children: BASH_ENV → ~/.bashenv → ~/.pathenv
 # Zsh children: always source ~/.zshenv → ~/.pathenv (no env var needed)
+# Keep pathenv in sync with the fish_add_path block below.
 set --global --export HOMEBREW_PREFIX /opt/homebrew
 set --global --export PNPM_HOME ~/Library/pnpm
 set --global --export BASH_ENV $HOME/.bashenv
@@ -10,7 +11,9 @@ if test -x $HOMEBREW_PREFIX/bin/brew
     $HOMEBREW_PREFIX/bin/brew shellenv | source
 end
 
-# --move: put these ahead of /usr/bin even if already on PATH
+# --move: put these ahead of /usr/bin even if already on PATH.
+# Order matches pathenv (first entry = highest priority).
+# PNPM: official layout uses $PNPM_HOME; some tools also install into $PNPM_HOME/bin.
 fish_add_path --global --move --path \
     ~/.claude/local \
     ~/.grok/bin \
@@ -22,6 +25,7 @@ fish_add_path --global --move --path \
     ~/.npm-global/bin \
     $HOMEBREW_PREFIX/opt/make/libexec/gnubin \
     $HOMEBREW_PREFIX/opt/postgresql@18/bin \
+    $PNPM_HOME \
     $PNPM_HOME/bin
 
 set --global --export EDITOR vim

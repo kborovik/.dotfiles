@@ -6,8 +6,8 @@ set --global --export HOMEBREW_PREFIX /opt/homebrew
 set --global --export PNPM_HOME ~/Library/pnpm
 set --global --export BASH_ENV $HOME/.bashenv
 
-if test (uname) = Darwin; and test -x $HOMEBREW_PREFIX/bin/brew
-    eval ($HOMEBREW_PREFIX/bin/brew shellenv)
+if test -x $HOMEBREW_PREFIX/bin/brew
+    $HOMEBREW_PREFIX/bin/brew shellenv | source
 end
 
 # --move: put these ahead of /usr/bin even if already on PATH
@@ -22,17 +22,15 @@ fish_add_path --global --move --path \
     ~/.npm-global/bin \
     $HOMEBREW_PREFIX/opt/make/libexec/gnubin \
     $HOMEBREW_PREFIX/opt/postgresql@18/bin \
-    $HOMEBREW_PREFIX/bin \
-    $HOMEBREW_PREFIX/sbin \
     $PNPM_HOME/bin
 
-if status is-interactive
+set --global --export EDITOR vim
+set --global --export VISUAL vim
+set --global --export PAGER "less -R -F -i"
+set --global --export GLAMOUR_STYLE ~/.dotfiles/glamour/glamour-custom.json
+set --global --export OPENCODE_DISABLE_CLAUDE_CODE_SKILLS 1
 
-    set --global --export EDITOR vim
-    set --global --export VISUAL vim
-    set --global --export PAGER "less -R -F -i"
-    set --global --export GLAMOUR_STYLE ~/.dotfiles/glamour/glamour-custom.json
-    set --global --export OPENCODE_DISABLE_CLAUDE_CODE_SKILLS 1
+if status is-interactive
 
     set --global __fish_git_prompt_show_informative_status true
     set --global __fish_git_prompt_showcolorhints true
@@ -53,84 +51,41 @@ if status is-interactive
     set --global __fish_git_prompt_color_cleanstate a6da95
     set --global __fish_git_prompt_color_merging c6a0f6
 
-    function gaa --description 'git add --all'
-        git add --all $argv
-    end
+    # Catppuccin Macchiato palette for `glo`/`gloa` git log format
+    set --global __fish_git_log_color_hash b7bdf8 # Lavender
+    set --global __fish_git_log_color_decorate eed49f # Yellow
+    set --global __fish_git_log_color_date b8c0e0 # Subtext1
+    set --global __fish_git_log_color_author 7dc4e4 # Sapphire
+    set --global __fish_git_log_color_subject cad3f5 # Text
 
-    function gc --description 'git commit'
-        git commit $argv
-    end
+    # Abbreviations (auto-expanded on Space/Enter for interactive clarity & completion)
+    abbr -a gaa 'git add --all'
+    abbr -a gc 'git commit'
+    abbr -a gd 'git difftool'
+    abbr -a gs 'git difftool --staged'
+    abbr -a gl 'git fetch --prune --prune-tags --all --tags'
+    abbr -a gk 'git pull --prune --all --tags'
+    abbr -a glo "git log --pretty=format:'%C(#$__fish_git_log_color_hash)%h %C(#$__fish_git_log_color_decorate)%d%Creset %C(#$__fish_git_log_color_date)(%cr)%Creset %C(#$__fish_git_log_color_author)%an %Creset %C(#$__fish_git_log_color_subject)%s'"
+    abbr -a gloa "git log --graph --all --pretty=format:'%C(#$__fish_git_log_color_hash)%h %C(#$__fish_git_log_color_decorate)%d%Creset %C(#$__fish_git_log_color_date)(%cr)%Creset %C(#$__fish_git_log_color_author)%an %Creset %C(#$__fish_git_log_color_subject)%s'"
+    abbr -a gp 'git push'
+    abbr -a gst 'git status'
 
-    function gd --description 'git difftool'
-        git difftool $argv
-    end
+    abbr -a la 'ls -ha'
+    abbr -a ll 'ls -hlF'
+    abbr -a tree 'tree -C'
 
-    function gs --description 'git difftool --staged'
-        git difftool --staged $argv
-    end
-
-    function gl --description 'git fetch --prune --prune-tags --all --tags'
-        git fetch --prune --prune-tags --all --tags $argv
-    end
-
-    function gk --description 'git pull --prune --all --tags'
-        git pull --prune --all --tags $argv
-    end
-
-    function glo --description 'git log with pretty format'
-        git log --pretty=format:'%C(#b7bdf8)%h %C(#eed49f)%d%Creset %C(#b8c0e0)(%cr)%Creset %C(#7dc4e4)%an %Creset %C(#cad3f5)%s' $argv
-    end
-
-    function gloa --description 'git log graph with pretty format'
-        git log --graph --all --pretty=format:'%C(#b7bdf8)%h %C(#eed49f)%d%Creset %C(#b8c0e0)(%cr)%Creset %C(#7dc4e4)%an %Creset %C(#cad3f5)%s' $argv
-    end
-
-    function gp --description 'git push'
-        git push $argv
-    end
-
-    function gst --description 'git status'
-        git status $argv
-    end
-
-    function ls --description 'ls --color=auto'
-        command ls --color=auto $argv
-    end
-
-    function la --description 'ls -ha'
-        ls -ha $argv
-    end
-
-    function ll --description 'ls -hlF'
-        ls -hlF $argv
-    end
-
-    function tree --description 'tree -C'
-        command tree -C $argv
-    end
-
-    function shred --description 'shred -ufv'
-        command shred -ufv $argv
-    end
-
-    function commit --description 'git commit staged changes'
-        grok -p 'Commit the staged git changes only (do not stage anything). Write the commit message in Conventional Commits format using the steno skill: a concise type(scope): subject line, and a body only if the changes need explanation. Do not add any Claude/AI attribution or trailers.' \
-            --always-approve \
-            --no-ask-user \
-            --no-subagents \
-            --disable-web-search
-    end
-
-    if test (uname) = Darwin; and test -x $HOMEBREW_PREFIX/bin/gln
-        function ln --description 'GNU ln replacement'
-            $HOMEBREW_PREFIX/bin/gln $argv
-        end
+    if type -q -f shred
+        abbr -a shred 'shred -ufv'
     end
 
     if test (uname) = Darwin
-        function top --description 'top with custom stats'
-            command top -stats command,cpu,time,mem,state,user $argv
+        if test -x $HOMEBREW_PREFIX/bin/gln
+            function ln --description 'GNU ln replacement'
+                $HOMEBREW_PREFIX/bin/gln $argv
+            end
         end
+
+        abbr -a top 'top -stats command,cpu,time,mem,state,user'
     end
 
 end

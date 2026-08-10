@@ -24,7 +24,7 @@ fish_add_path --global --move --path \
     $HOMEBREW_PREFIX/opt/postgresql@18/bin \
     $HOMEBREW_PREFIX/bin \
     $HOMEBREW_PREFIX/sbin \
-    $PNPM_HOME
+    $PNPM_HOME/bin
 
 if status is-interactive
 

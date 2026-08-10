@@ -62,24 +62,53 @@ if status is-interactive
     set --global __fish_git_log_color_author 7dc4e4 # Sapphire
     set --global __fish_git_log_color_subject cad3f5 # Text
 
-    # Abbreviations (auto-expanded on Space/Enter for interactive clarity & completion)
-    abbr -a gaa 'git add --all'
-    abbr -a gc 'git commit'
-    abbr -a gd 'git difftool'
-    abbr -a gs 'git difftool --staged'
-    abbr -a gl 'git fetch --prune --prune-tags --all --tags'
-    abbr -a gk 'git pull --prune --all --tags'
-    abbr -a glo "git log --pretty=format:'%C(#$__fish_git_log_color_hash)%h %C(#$__fish_git_log_color_decorate)%d%Creset %C(#$__fish_git_log_color_date)(%cr)%Creset %C(#$__fish_git_log_color_author)%an %Creset %C(#$__fish_git_log_color_subject)%s'"
-    abbr -a gloa "git log --graph --all --pretty=format:'%C(#$__fish_git_log_color_hash)%h %C(#$__fish_git_log_color_decorate)%d%Creset %C(#$__fish_git_log_color_date)(%cr)%Creset %C(#$__fish_git_log_color_author)%an %Creset %C(#$__fish_git_log_color_subject)%s'"
-    abbr -a gp 'git push'
-    abbr -a gst 'git status'
+    # Wrappers (functions so args append and non-interactive agents can call them too
+    # if this block is ever moved outside is-interactive)
+    function gaa --description 'git add --all'
+        git add --all $argv
+    end
+    function gc --description 'git commit'
+        git commit $argv
+    end
+    function gd --description 'git difftool'
+        git difftool $argv
+    end
+    function gs --description 'git difftool --staged'
+        git difftool --staged $argv
+    end
+    function gl --description 'git fetch --prune --prune-tags --all --tags'
+        git fetch --prune --prune-tags --all --tags $argv
+    end
+    function gk --description 'git pull --prune --all --tags'
+        git pull --prune --all --tags $argv
+    end
+    function glo --description 'git log (pretty, colored)'
+        git log --pretty=format:"%C(#$__fish_git_log_color_hash)%h %C(#$__fish_git_log_color_decorate)%d%Creset %C(#$__fish_git_log_color_date)(%cr)%Creset %C(#$__fish_git_log_color_author)%an %Creset %C(#$__fish_git_log_color_subject)%s" $argv
+    end
+    function gloa --description 'git log --graph --all (pretty, colored)'
+        git log --graph --all --pretty=format:"%C(#$__fish_git_log_color_hash)%h %C(#$__fish_git_log_color_decorate)%d%Creset %C(#$__fish_git_log_color_date)(%cr)%Creset %C(#$__fish_git_log_color_author)%an %Creset %C(#$__fish_git_log_color_subject)%s" $argv
+    end
+    function gp --description 'git push'
+        git push $argv
+    end
+    function gst --description 'git status'
+        git status $argv
+    end
 
-    abbr -a la 'ls -ha'
-    abbr -a ll 'ls -hlF'
-    abbr -a tree 'tree -C'
+    function la --description 'ls -ha'
+        ls -ha $argv
+    end
+    function ll --description 'ls -hlF'
+        ls -hlF $argv
+    end
+    function tree --description 'tree -C'
+        command tree -C $argv
+    end
 
     if type -q -f shred
-        abbr -a shred 'shred -ufv'
+        function shred --description 'shred -ufv'
+            command shred -ufv $argv
+        end
     end
 
     if test (uname) = Darwin
@@ -89,7 +118,9 @@ if status is-interactive
             end
         end
 
-        abbr -a top 'top -stats command,cpu,time,mem,state,user'
+        function top --description 'top with custom stats columns'
+            command top -stats command,cpu,time,mem,state,user $argv
+        end
     end
 
 end

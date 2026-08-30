@@ -144,7 +144,6 @@ base: tools $(fish_bin) gpg $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin) $(glo
 	mkdir -p $(HOME)/.config/gitui
 	/bin/ln -fs $(CURDIR)/gitui/theme.ron $(HOME)/.config/gitui/theme.ron
 	/bin/ln -fs $(CURDIR)/gitui/key_bindings.ron $(HOME)/.config/gitui/key_bindings.ron
-	rm -rf $(HOME)/.config/bat && /bin/ln -fs $(CURDIR)/bat $(HOME)/.config/bat
 	bat cache --build >/dev/null
 	mkdir -p $(HOME)/Library/Preferences/glow
 	/bin/ln -fs $(CURDIR)/glow/glow.yml $(HOME)/Library/Preferences/glow/glow.yml
@@ -154,9 +153,6 @@ base: tools $(fish_bin) gpg $(git_bin) $(riff_bin) $(vim_bin) $(gitui_bin) $(glo
 # bat/glow/uv: Homebrew vendor completions. grok/wrangler: generate when installed.
 fish-completions: ## Generate optional fish completions (grok, wrangler)
 	$(call header,fish - Completions)
-	rm -f $(CURDIR)/fish/completions/bat.fish
-	rm -f $(CURDIR)/fish/completions/glow.fish
-	rm -f $(CURDIR)/fish/completions/uv.fish
 	if command -v grok >/dev/null 2>&1; then \
 		grok completions fish > $(CURDIR)/fish/completions/grok.fish; \
 		echo "  grok.fish regenerated"; \
@@ -304,7 +300,6 @@ gpg: $(gpg_bin) $(pinentry_mac_bin) ## Install GnuPG + pinentry-mac and link con
 	/bin/ln -fs $(CURDIR)/gnupg/gpg.conf $(gpg_dir)/gpg.conf
 	/bin/ln -fs $(CURDIR)/gnupg/gpg-agent.conf $(gpg_dir)/gpg-agent.conf
 	gpgconf --kill gpg-agent
-	$(MAKE) gpg-encrypt
 
 gpg-encrypt: $(pass_bin) $(gpg_bin) ## Check all on-disk GPG private keys are passphrase-encrypted
 	$(call header,GPG - Check key encryption)

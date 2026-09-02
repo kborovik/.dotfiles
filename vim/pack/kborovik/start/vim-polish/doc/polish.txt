@@ -1,0 +1,93 @@
+*polish.txt*  Proofreader and LLM prompt optimizer via Gemini
+
+Author:  Konstantin Borovik
+License: MIT
+
+==============================================================================
+CONTENTS                                                      *polish-contents*
+
+    1. Introduction .......................... |polish-introduction|
+    2. Requirements .......................... |polish-requirements|
+    3. Configuration ......................... |polish-configuration|
+    4. Commands .............................. |polish-commands|
+    5. Mappings .............................. |polish-mappings|
+
+==============================================================================
+1. INTRODUCTION                                           *polish-introduction*
+
+vim-polish proofreads prose and optimizes LLM prompts in-buffer via Google
+Gemini. Select a range, run a command, and the text is replaced with the
+transformed version.
+
+==============================================================================
+2. REQUIREMENTS                                           *polish-requirements*
+
+- Vim 8.0+ or Neovim (with |json_encode| and |json_decode| support)
+- curl
+- A Gemini API key from one of (resolved lazily on first command):
+  `$GEMINI_API_KEY`, `~/.config/gemini/api-key` (mode 600), or
+  pass entry `google/GEMINI_API_KEY`
+
+==============================================================================
+3. CONFIGURATION                                         *polish-configuration*
+
+                                                              *g:polish_api_key*
+g:polish_api_key~
+    Gemini API key. Resolved lazily on first |:Proofread| / |:OptimizePrompt|
+    (not at Vim startup), then cached for the session. Order:
+    1. `g:polish_api_key` if already set
+    2. `$GEMINI_API_KEY`
+    3. first line of |g:polish_api_key_file| (default `~/.config/gemini/api-key`)
+    4. `pass show google/GEMINI_API_KEY` (first line only)
+
+    Do not put a real key in tracked vimrc. Prefer the key file or env:
+>
+    mkdir -p ~/.config/gemini
+    pass show google/GEMINI_API_KEY | head -n1 > ~/.config/gemini/api-key
+    chmod 600 ~/.config/gemini/api-key
+<
+                                                         *g:polish_api_key_file*
+g:polish_api_key_file~
+    Path to a mode-600 file whose first line is the API key.
+    Default: `~/.config/gemini/api-key`
+>
+    let g:polish_api_key_file = expand('~/.config/gemini/api-key')
+<
+                                                                 *g:polish_model*
+g:polish_model~
+    Gemini model id. Default: 'gemini-3.7-flash'
+>
+    let g:polish_model = 'gemini-3.7-flash'
+<
+                                                            *g:polish_max_tokens*
+g:polish_max_tokens~
+    Max output tokens. Default: 4096
+>
+    let g:polish_max_tokens = 4096
+<
+==============================================================================
+4. COMMANDS                                                   *polish-commands*
+
+                                                                   *:Proofread*
+:[range]Proofread~
+    Proofread selected text. Fixes spelling, grammar, and punctuation.
+    Replaces the range with corrected text.
+
+                                                              *:OptimizePrompt*
+:[range]OptimizePrompt~
+    Optimize an LLM prompt: clarify objective/format, add constraints, improve
+    structure, remove ambiguity. Replaces the range with the optimized prompt.
+
+==============================================================================
+5. MAPPINGS                                                   *polish-mappings*
+
+Defined in vimrc:
+
+<F2>                                                            *polish-<F2>*
+    Run |:Proofread| (normal: current line; visual: selection).
+
+<S-F2>                                                        *polish-<S-F2>*
+    Run |:OptimizePrompt| (normal: current line; visual: selection).
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:

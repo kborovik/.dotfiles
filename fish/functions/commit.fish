@@ -19,14 +19,15 @@ function commit --description 'git commit staged changes via Gemini'
         return 1
     end
 
-    if not command -q pass
-        echo "Error: pass is required" >&2
+    set -l key_file ~/.config/gemini/api-key
+    if not test -r $key_file
+        echo "Error: missing readable $key_file (mode 600; first line is the Gemini API key)" >&2
         return 1
     end
 
-    set -l api_key (pass show google/GEMINI_API_KEY 2>/dev/null | string collect)
+    set -l api_key (head -n1 $key_file | string trim)
     if test -z "$api_key"
-        echo "Error: could not read google/GEMINI_API_KEY from pass" >&2
+        echo "Error: empty API key in $key_file" >&2
         return 1
     end
 

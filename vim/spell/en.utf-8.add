@@ -2,7 +2,8 @@ Anthropic
 LLM
 uuid
 ollama
-ClaudeProofread
+Proofread
+OptimizePrompt
 kborovik
 vimrc
 cli

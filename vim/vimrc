@@ -51,11 +51,11 @@ nmap <Leader>ws <C-w>s
 nmap <Leader>wv <C-w>v
 nmap <Leader>ww <C-w>o
 
-" Map Claude Proofreader / Optimizer
-nmap <F2> :ClaudeProofread<CR>
-vmap <F2> :'<,'>ClaudeProofread<CR>
-nmap <S-F2> :ClaudeOptimize<CR>
-vmap <S-F2> :'<,'>ClaudeOptimize<CR>
+" Map proofreader / prompt optimizer (vim-polish)
+nmap <F2> :Proofread<CR>
+vmap <F2> :'<,'>Proofread<CR>
+nmap <S-F2> :OptimizePrompt<CR>
+vmap <S-F2> :'<,'>OptimizePrompt<CR>
 
 " Map spell settings
 set spelllang=en_us

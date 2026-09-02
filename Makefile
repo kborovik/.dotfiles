@@ -1,7 +1,7 @@
 .SILENT:
 .EXPORT_ALL_VARIABLES:
 .PHONY: default help init base tools zed claude grok opencode pgsql ssh
-.PHONY: fish fish-completions gpg git vim gitui glamour
+.PHONY: fish fish-completions gpg git vim gitui glamour api-keys
 .PHONY: git-credentials-load git-credentials-save commit prompt ssh-save ssh-encrypt gpg-encrypt
 
 MAKEFLAGS += --no-builtin-rules --no-builtin-variables
@@ -358,6 +358,20 @@ ssh-encrypt: $(pass_bin) | $(ssh_dir) ## Add passphrase (from pass ssh/passphras
 ssh-save: ## Re-encrypt ~/.ssh/config to repo
 	$(call header,SSH - Encrypt config)
 	gpg -er E4AFCA7FBB19FC029D519A524AEBB5178D5E96C1 -o $(CURDIR)/ssh/config.gpg $(ssh_dir)/config
+
+###############################################################################
+# API keys (materialize from pass into ~/.config — never commit)
+###############################################################################
+
+gemini_dir := $(HOME)/.config/gemini
+gemini_api_key := $(gemini_dir)/api-key
+
+api-keys: $(pass_bin) ## Write API keys from pass into ~/.config (mode 600)
+	$(call header,API keys)
+	mkdir -p $(gemini_dir) && chmod 700 $(gemini_dir)
+	pass show google/GEMINI_API_KEY | head -n1 > $(gemini_api_key)
+	chmod 600 $(gemini_api_key)
+	echo "  $(gemini_api_key)"
 
 ###############################################################################
 # Prompt

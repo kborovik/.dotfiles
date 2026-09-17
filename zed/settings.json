@@ -87,6 +87,9 @@
     },
   },
   "edit_predictions": {
+    "ollama": {
+      "api_url": "http://localhost:11434"
+    },
     "mode": "eager",
   },
   "agent_buffer_font_size": 19.0,

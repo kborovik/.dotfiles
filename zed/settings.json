@@ -1,4 +1,7 @@
 {
+  "markdown_preview": {
+    "font_size": 19.0
+  },
   "show_completion_documentation": false,
   "show_completions_on_input": true,
   "completions": {

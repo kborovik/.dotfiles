@@ -23,6 +23,7 @@ fish_add_path --global --move --path \
     ~/.opencode/bin \
     ~/.bun/bin \
     ~/.npm-global/bin \
+    ~/.bcode/bin \
     $HOMEBREW_PREFIX/opt/make/libexec/gnubin \
     $HOMEBREW_PREFIX/opt/postgresql@18/bin \
     $PNPM_HOME \
@@ -124,3 +125,6 @@ if status is-interactive
     end
 
 end
+
+# bcode
+fish_add_path /Users/kb/.bcode/bin

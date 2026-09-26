@@ -1,5 +1,23 @@
 {
+  "close_panel_on_toggle": true,
+  "active_pane_modifiers": {
+    "border_size": 1.0
+  },
+  "title_bar": {
+    "show_branch_status_icon": true
+  },
+  "status_bar": {
+    "line_endings_button": false,
+    "active_encoding_button": "non_utf8"
+  },
+  "cursor_animation": {
+    "enabled": false
+  },
+  "default_open_behavior": "new_window",
+  "reveal_if_open": true,
   "markdown_preview": {
+    "code_font_family": "IBM Plex Mono",
+    "font_family": "IBM Plex Mono",
     "font_size": 19.0
   },
   "show_completion_documentation": false,
@@ -8,17 +26,15 @@
     "lsp": true,
   },
   "agent_servers": {
-    "claude-acp": {
-      "type": "registry",
     },
-  },
   "preferred_line_length": 120,
-  "cli_default_open_behavior": "existing_window",
+  "cli_default_open_behavior": "new_window",
   "diff_view_style": "unified",
   "debugger": {
     "button": false,
   },
   "collaboration_panel": {
+    "button": false,
     "dock": "right",
   },
   "git_panel": {
@@ -45,6 +61,7 @@
     },
   ],
   "agent": {
+    "sidebar_side": "right",
     "favorite_models": [
       {
         "provider": "anthropic",
@@ -76,8 +93,8 @@
     "use_modifier_to_send": true,
     "play_sound_when_agent_done": "always",
     "inline_assistant_model": {
-      "provider": "anthropic",
-      "model": "claude-opus-4-7-latest",
+      "provider": "zed.dev",
+      "model": "gpt-6-luna",
     },
     "default_profile": "write",
     "default_width": 500,
@@ -85,11 +102,14 @@
     "default_model": {
       "effort": "high",
       "enable_thinking": true,
-      "provider": "zed.dev",
-      "model": "claude-sonnet-5",
+      "provider": "x_ai_subscribed",
+      "model": "grok-4.6",
     },
   },
   "edit_predictions": {
+    "zed": {
+      "prediction_debounce": 75
+    },
     "ollama": {
       "api_url": "http://localhost:11434"
     },
@@ -137,12 +157,14 @@
     },
   },
   "terminal": {
+    "button": false,
     "shell": {
       "program": "/opt/homebrew/bin/fish",
     },
   },
   "languages": {
     "Python": {
+      "show_edit_predictions": false,
       "code_actions_on_format": {
         "source.organizeImports.ruff": true,
       },

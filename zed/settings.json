@@ -1,4 +1,10 @@
 {
+  "ui_font_weight": 400.0,
+  "vim": {
+    "use_regex_search": false,
+    "use_smartcase_find": true
+  },
+  "proxy": "",
   "close_panel_on_toggle": true,
   "active_pane_modifiers": {
     "border_size": 1.0
@@ -7,13 +13,14 @@
     "show_branch_status_icon": true
   },
   "status_bar": {
+    "show_active_file": true,
     "line_endings_button": false,
     "active_encoding_button": "non_utf8"
   },
   "cursor_animation": {
     "enabled": false
   },
-  "default_open_behavior": "new_window",
+  "default_open_behavior": "existing_window",
   "reveal_if_open": true,
   "markdown_preview": {
     "code_font_family": "IBM Plex Mono",
@@ -28,7 +35,7 @@
   "agent_servers": {
     },
   "preferred_line_length": 120,
-  "cli_default_open_behavior": "new_window",
+  "cli_default_open_behavior": "existing_window",
   "diff_view_style": "unified",
   "debugger": {
     "button": false,
@@ -44,6 +51,7 @@
     "dock": "right",
   },
   "project_panel": {
+    "git_status_indicator": true,
     "dock": "right",
   },
   "helix_mode": false,
@@ -61,34 +69,24 @@
     },
   ],
   "agent": {
-    "sidebar_side": "right",
-    "favorite_models": [
-      {
-        "provider": "anthropic",
-        "model": "claude-sonnet-4-6-latest",
-        "enable_thinking": true,
-        "effort": "high"
-      },
-      {
-        "provider": "anthropic",
-        "model": "claude-opus-4-7-latest",
-        "enable_thinking": true,
-        "effort": "high"
-      },
-      {
-        "provider": "zed.dev",
-        "model": "claude-sonnet-4-6",
-        "enable_thinking": true,
-        "effort": "high"
-      },
-      {
-        "provider": "zed.dev",
-        "model": "claude-sonnet-5",
-        "enable_thinking": true,
-        "effort": "high"
+    "tool_permissions": {
+      "tools": {
+        "fetch": {
+          "default": "allow"
+        }
       }
-    ],
-    "dock": "left",
+    },
+    "sandbox_permissions": {
+      "network_hosts": [
+        "zed.dev",
+        "raw.githubusercontent.com"
+      ]
+    },
+    "max_content_width": 900.0,
+    "threads_sidebar_default_width": 400.0,
+    "sidebar_side": "right",
+    "favorite_models": [],
+    "dock": "right",
     "single_file_review": true,
     "use_modifier_to_send": true,
     "play_sound_when_agent_done": "always",
@@ -119,7 +117,7 @@
   "agent_ui_font_size": 19.0,
   "buffer_font_size": 19.0,
   "buffer_font_family": "IBM Plex Mono",
-  "ui_font_size": 19.0,
+  "ui_font_size": 18.0,
   "ui_font_family": "IBM Plex Mono",
   "icon_theme": {
     "mode": "dark",

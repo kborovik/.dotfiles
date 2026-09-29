@@ -7,6 +7,7 @@
       "space g g": "git_graph::Open",
       "space g m": "git::OpenModifiedFiles",
       "space g h": "git::FileHistory",
+      "space g u": "git::ViewUncommittedChanges"
     },
   },
   {

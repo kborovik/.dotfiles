@@ -25,5 +25,6 @@
   "fileCheckpointingEnabled": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "enableWorkflows": true
 }

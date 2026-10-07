@@ -21,7 +21,6 @@ fish_add_path --global --move --path \
     ~/.cargo/bin \
     ~/.local/bin \
     ~/.opencode/bin \
-    ~/.bun/bin \
     ~/.npm-global/bin \
     ~/.bcode/bin \
     $HOMEBREW_PREFIX/opt/make/libexec/gnubin \
@@ -125,6 +124,3 @@ if status is-interactive
     end
 
 end
-
-# bcode
-fish_add_path /Users/kb/.bcode/bin

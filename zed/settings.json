@@ -71,6 +71,9 @@
   "agent": {
     "tool_permissions": {
       "tools": {
+        "terminal": {
+          "default": "allow"
+        },
         "fetch": {
           "default": "allow"
         }
@@ -98,10 +101,10 @@
     "default_width": 500,
     "default_height": 400,
     "default_model": {
-      "effort": "high",
+      "effort": "medium",
       "enable_thinking": true,
-      "provider": "x_ai_subscribed",
-      "model": "grok-4.6",
+      "provider": "zed.dev",
+      "model": "claude-sonnet-5-5",
     },
   },
   "edit_predictions": {

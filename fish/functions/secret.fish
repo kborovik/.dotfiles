@@ -2,7 +2,7 @@
 # ~/.secrets is the existing private directory (mode 700).
 # Export is global, never universal, so values stay out of fish_variables.
 
-function secret --description 'Read and update secrets in ~/.secrets/env'
+function secret --description 'List, create, and update secrets in ~/.secrets/env'
     set -l export_flag 0
     set -l positionals
     set -l ended 0
@@ -36,15 +36,15 @@ function secret --description 'Read and update secrets in ~/.secrets/env'
     set -e positionals[1]
 
     switch $cmd
-        case read
-            __secret_cmd_read $export_flag $positionals
+        case list
+            __secret_cmd_list $export_flag $positionals
             return $status
-        case update
+        case create update
             if test $export_flag -eq 1
-                echo "secret: --export applies to read" >&2
+                echo "secret: --export applies to list" >&2
                 return 2
             end
-            __secret_cmd_update $positionals
+            __secret_cmd_write $cmd $positionals
             return $status
         case '*'
             __secret_usage
@@ -53,7 +53,8 @@ function secret --description 'Read and update secrets in ~/.secrets/env'
 end
 
 function __secret_usage
-    echo "Usage: secret read [--export] [NAME]" >&2
+    echo "Usage: secret list [--export] [NAME]" >&2
+    echo "       secret create NAME [VALUE]" >&2
     echo "       secret update NAME [VALUE]" >&2
     echo "File: ~/.secrets/env" >&2
 end
@@ -169,11 +170,11 @@ function __secret_format_value --argument-names value
     printf '"%s"\n' $out
 end
 
-function __secret_cmd_read
+function __secret_cmd_list
     set -l export_flag $argv[1]
     set -e argv[1]
     if test (count $argv) -gt 1
-        echo "secret: read takes at most one name" >&2
+        echo "secret: list takes at most one name" >&2
         __secret_usage
         return 2
     end
@@ -182,7 +183,7 @@ function __secret_cmd_read
     if test (count $argv) -eq 1
         set want $argv[1]
         if not string match -qr -- '^[A-Za-z_][A-Za-z0-9_]*$' $want
-            echo "secret: invalid name '$want'" >&2
+            echo "secret: invalid name '$want'; a name starts with a letter or underscore, then only letters, digits, and underscores" >&2
             return 2
         end
     end
@@ -240,15 +241,17 @@ function __secret_cmd_read
     return 0
 end
 
-function __secret_cmd_update
+function __secret_cmd_write
+    set -l mode $argv[1]
+    set -e argv[1]
     if test (count $argv) -lt 1
-        echo "secret: update needs a name" >&2
+        echo "secret: $mode needs a name" >&2
         __secret_usage
         return 2
     end
     set -l name $argv[1]
     if not string match -qr -- '^[A-Za-z_][A-Za-z0-9_]*$' $name
-        echo "secret: invalid name '$name'" >&2
+        echo "secret: invalid name '$name'; a name starts with a letter or underscore, then only letters, digits, and underscores" >&2
         return 2
     end
 
@@ -287,12 +290,26 @@ function __secret_cmd_update
         end < $file
     end
 
+    if test "$mode" = create
+        for item in $stored
+            set -l line (string sub --start 2 -- $item)
+            set -l secret_key ""
+            set -l secret_value ""
+            if __secret_take $line
+                and test "$secret_key" = "$name"
+                echo "secret: $name already exists in ~/.secrets/env" >&2
+                return 1
+            end
+        end
+    end
+
     set -l formatted (__secret_format_value $new_value | string collect)
     set -l out
     if not test -f $file
         set out \
             ".# Local secrets for fish. Mode 600. Outside the repo." \
-            ".# secret read [NAME]" \
+            ".# secret list [--export] [NAME]" \
+            ".# secret create NAME [VALUE]" \
             ".# secret update NAME [VALUE]"
     end
 
@@ -318,7 +335,12 @@ function __secret_cmd_update
 
     __secret_write $out
     or return 1
-    echo "updated $name in ~/.secrets/env" >&2
+    switch $mode
+        case create
+            echo "created $name in ~/.secrets/env" >&2
+        case '*'
+            echo "updated $name in ~/.secrets/env" >&2
+    end
     return 0
 end
 

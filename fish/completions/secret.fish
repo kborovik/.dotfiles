@@ -24,7 +24,8 @@ function __secret_complete_names
 end
 
 complete -c secret -f
-complete -c secret -n '__fish_use_subcommand' -a read -d 'Print a secret, or list names'
+complete -c secret -n '__fish_use_subcommand' -a list -d 'Print a secret, or list names'
+complete -c secret -n '__fish_use_subcommand' -a create -d 'Add a secret to ~/.secrets/env'
 complete -c secret -n '__fish_use_subcommand' -a update -d 'Set a secret in ~/.secrets/env'
-complete -c secret -n '__fish_seen_subcommand_from read' -s e -l export -d 'Export instead of printing'
+complete -c secret -n '__fish_seen_subcommand_from list' -s e -l export -d 'Export instead of printing'
 complete -c secret -n '__secret_completing_name' -a '(__secret_complete_names)' -d Secret

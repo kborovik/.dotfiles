@@ -80,9 +80,16 @@
       }
     },
     "sandbox_permissions": {
+      "write_paths": [
+        {
+          "requested": "/Users/kb/.config/zed",
+          "resolved": "/Users/kb/.config/zed"
+        }
+      ],
       "network_hosts": [
         "zed.dev",
-        "raw.githubusercontent.com"
+        "raw.githubusercontent.com",
+        "github.com"
       ]
     },
     "max_content_width": 900.0,

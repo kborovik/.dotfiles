@@ -6,6 +6,19 @@
     ],
     "defaultMode": "auto"
   },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Job done\" with title \"Claude Code\" sound name \"Glass\"'"
+          }
+        ]
+      }
+    ]
+  },
+  "enableWorkflows": true,
   "workflowKeywordTriggerEnabled": false,
   "statusLine": {
     "type": "command",
@@ -22,9 +35,8 @@
   "skipWorkflowUsageWarning": true,
   "theme": "dark-ansi",
   "editorMode": "vim",
-  "fileCheckpointingEnabled": true,
+  "fileCheckpointingEnabled": false,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "enableWorkflows": true
+  "skipAutoPermissionPrompt": true
 }

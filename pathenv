@@ -1,27 +1,64 @@
 # Shared brew-first PATH for non-interactive agent shells (bash + zsh).
 # Sourced by bashenv (via BASH_ENV) and zshenv (always for every zsh).
-# Mirror of fish config.fish fish_add_path order (first = highest priority).
+# Same three layers as fish/conf.d/00-path.fish; tool entries live in
+# ~/.dotfiles/paths. Idempotent: an entry already on PATH moves to the
+# front instead of repeating, so nested shells do not grow PATH.
 #
 # Installed as ~/.pathenv via `make base`. Do not export BASH_ENV here —
 # leave that to bashenv so pure PATH consumers stay shell-neutral.
 
-# shellcheck disable=SC2123
-PATH="\
-${HOME}/.claude/local:\
-${HOME}/.grok/bin:\
-${HOME}/go/bin:\
-${HOME}/.cargo/bin:\
-${HOME}/.local/bin:\
-${HOME}/.opencode/bin:\
-${HOME}/.bun/bin:\
-${HOME}/.npm-global/bin:\
-/opt/homebrew/opt/make/libexec/gnubin:\
-/opt/homebrew/opt/postgresql@18/bin:\
-${HOME}/Library/pnpm:\
-${HOME}/Library/pnpm/bin:\
-/opt/homebrew/bin:\
-/opt/homebrew/sbin:\
-${PATH}"
-export PATH
 export HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/opt/homebrew}"
 export PNPM_HOME="${PNPM_HOME:-$HOME/Library/pnpm}"
+
+# Move the argument directories to the front of PATH, in argument order
+# (fish_add_path --move).
+_pathenv_prepend() {
+  _pathenv_add=
+  for _pathenv_dir in "$@"; do
+    _pathenv_rest=":${PATH}:"
+    while case "${_pathenv_rest}" in *":${_pathenv_dir}:"*) true ;; *) false ;; esac; do
+      _pathenv_rest="${_pathenv_rest%%":${_pathenv_dir}:"*}:${_pathenv_rest#*":${_pathenv_dir}:"}"
+    done
+    _pathenv_rest="${_pathenv_rest#:}"
+    PATH="${_pathenv_rest%:}"
+    _pathenv_add="${_pathenv_add:+${_pathenv_add}:}${_pathenv_dir}"
+  done
+  # if, not &&: a false test must not return non-zero under `bash -e`.
+  if [ -n "${_pathenv_add}" ]; then
+    PATH="${_pathenv_add}${PATH:+:${PATH}}"
+  fi
+  unset _pathenv_add _pathenv_dir _pathenv_rest
+}
+
+# 1. Base: Homebrew bin and sbin.
+_pathenv_prepend "${HOMEBREW_PREFIX}/bin" "${HOMEBREW_PREFIX}/sbin"
+
+# 2. Tools: ~/.dotfiles/paths, first line = highest priority.
+if [ -r "${HOME}/.dotfiles/paths" ]; then
+  _pathenv_tools=
+  while IFS= read -r _pathenv_line || [ -n "${_pathenv_line}" ]; do
+    case "${_pathenv_line}" in
+      '' | '#'*) continue ;;
+      '~/'*) _pathenv_line="${HOME}/${_pathenv_line#\~/}" ;;
+    esac
+    # Missing directories are skipped, as fish_add_path does.
+    [ -d "${_pathenv_line}" ] || continue
+    _pathenv_tools="${_pathenv_tools}${_pathenv_tools:+
+}${_pathenv_line}"
+  done < "${HOME}/.dotfiles/paths"
+  _pathenv_ifs=$IFS
+  IFS='
+'
+  # shellcheck disable=SC2086
+  _pathenv_prepend ${_pathenv_tools}
+  IFS=$_pathenv_ifs
+  unset _pathenv_tools _pathenv_line _pathenv_ifs
+fi
+
+# 3. Per-project overrides: fnm (set by fish) keeps the project's Node first.
+if [ -n "${FNM_MULTISHELL_PATH:-}" ]; then
+  _pathenv_prepend "${FNM_MULTISHELL_PATH}/bin"
+fi
+
+unset -f _pathenv_prepend
+export PATH

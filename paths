@@ -1,0 +1,17 @@
+# Tool PATH entries, one directory per line, first line = highest priority.
+# Read by fish/conf.d/00-path.fish and pathenv (bash + zsh). Edit only here.
+# Entries start with ~/ or /. Missing directories are skipped.
+# Homebrew (bin, sbin) and fnm are layered by those files, not listed here.
+~/.claude/local
+~/.grok/bin
+~/go/bin
+~/.cargo/bin
+~/.local/bin
+~/.opencode/bin
+~/.bun/bin
+~/.bcode/bin
+~/.npm-global/bin
+/opt/homebrew/opt/make/libexec/gnubin
+/opt/homebrew/opt/postgresql@18/bin
+~/Library/pnpm
+~/Library/pnpm/bin

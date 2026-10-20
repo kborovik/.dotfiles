@@ -1,7 +1,7 @@
 .SILENT:
 .EXPORT_ALL_VARIABLES:
 .PHONY: default help init base tools zed claude grok opencode pgsql ssh
-.PHONY: fish fish-completions gpg git vim gitui glamour api-keys
+.PHONY: fish fish-completions path-check gpg git vim gitui glamour api-keys
 .PHONY: git-credentials-load git-credentials-save commit prompt ssh-save ssh-encrypt gpg-encrypt
 
 MAKEFLAGS += --no-builtin-rules --no-builtin-variables
@@ -167,6 +167,28 @@ fish-completions: ## Generate optional fish completions (grok, wrangler)
 		rm -f $(CURDIR)/fish/completions/wrangler.fish; \
 		echo "  wrangler not installed — skipped"; \
 	fi
+
+# Fish and bash must build the same PATH from paths; fish_user_paths must stay unset.
+path-check: ## Check fish and bash agree on PATH
+	$(call header,PATH - Check)
+	both=$$(cd $(HOME) && env -i HOME=$(HOME) USER=$(USER) PATH=/usr/bin:/bin:/usr/sbin:/sbin \
+		/opt/homebrew/bin/fish -c 'string join : $$PATH; /bin/bash -c "echo \$$PATH"'); \
+	fish_path=$$(echo "$$both" | sed -n 1p); \
+	bash_path=$$(echo "$$both" | sed -n 2p); \
+	status=0; \
+	if [ "$$fish_path" != "$$bash_path" ]; then \
+		echo "  fish and bash PATH differ:"; \
+		echo "  fish: $$fish_path"; \
+		echo "  bash: $$bash_path"; \
+		status=1; \
+	else \
+		echo "  fish and bash PATH match"; \
+	fi; \
+	if /opt/homebrew/bin/fish -c 'set -q --universal fish_user_paths'; then \
+		echo "  universal fish_user_paths is set; clear it: set -Ue fish_user_paths"; \
+		status=1; \
+	fi; \
+	exit $$status
 
 ###############################################################################
 # Zed Editor

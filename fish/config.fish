@@ -5,6 +5,7 @@ set --global --export VISUAL vim
 set --global --export PAGER "less -R -F -i"
 set --global --export GLAMOUR_STYLE ~/.dotfiles/glamour/glamour-custom.json
 set --global --export OPENCODE_DISABLE_CLAUDE_CODE_SKILLS 1
+set --global --export XERO_TEMPLATE ~/.config/xero-cli/elastify.toml
 
 if status is-interactive
 
